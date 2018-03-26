@@ -23,7 +23,6 @@ package de.quippy.javamod.multimedia.mod.loader;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 import de.quippy.javamod.io.ModfileInputStream;
