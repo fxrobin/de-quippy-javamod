@@ -27,9 +27,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
-
 import de.quippy.javamod.mixer.Mixer;
 
 /**
@@ -93,13 +90,7 @@ public abstract class MultimediaContainer
 			return urlName.toExternalForm();
 		}
 	}
-	public void updateLookAndFeel() 
-	{
-		JPanel infoPanel = getInfoPanel();
-		JPanel configPanel = getConfigPanel();
-		if (infoPanel!=null) SwingUtilities.updateComponentTreeUI(infoPanel); 
-		if (configPanel!=null) SwingUtilities.updateComponentTreeUI(configPanel); 
-	}
+	
 	public void addListener(MultimediaContainerEventListener listener)
 	{
 		listeners.add(listener);
@@ -141,18 +132,7 @@ public abstract class MultimediaContainer
 	 * @since 13.10.2007
 	 * @return
 	 */
-	public abstract JPanel getInfoPanel();
-	/**
-	 * Returns the config panel for this mixer
-	 * @since 13.10.2007
-	 * @return
-	 */
-	public abstract JPanel getConfigPanel();
-	/**
-	 * The file extensions this container is responsible for 
-	 * @since: 12.10.2007
-	 * @return
-	 */
+	
 	public abstract String [] getFileExtensionList();
 	/**
 	 * A describtive Name for e.g. a FileChooser

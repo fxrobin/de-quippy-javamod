@@ -23,28 +23,18 @@ package de.quippy.javamod.system;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Container;
 import java.awt.Font;
 import java.awt.Insets;
-import java.awt.dnd.DnDConstants;
-import java.awt.dnd.DropTarget;
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.StringTokenizer;
 
 import javax.sound.sampled.AudioFormat;
@@ -52,11 +42,6 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.Mixer;
-import javax.swing.filechooser.FileFilter;
-
-import de.quippy.javamod.main.gui.components.SimpleProgessDialog;
-import de.quippy.javamod.main.gui.tools.FileChooserResult;
-import de.quippy.javamod.main.gui.tools.PlaylistDropListener;
 
 /**
  * @author Daniel Becker
@@ -88,9 +73,6 @@ public class Helpers
 	public static final String CODING_M3U = "ISO-8859-1";
 	public static String currentCoding = CODING_GUI;
 
-	public static final Font DIALOG_FONT = new Font(Font.DIALOG, Font.PLAIN, 10);
-	public static final String DEFAULTFONTPATH = "/de/quippy/javamod/main/gui/ressources/lucon.ttf";
-
 	/** 
 	 * HomeDir is the property of the system value "user.home".
 	 * With Applets this value is unreadable (SecurityException)
@@ -114,17 +96,6 @@ public class Helpers
 				Log.error("Could not set home dir", ex2);
 				HOMEDIR = "";
 			}
-		}
-		try
-		{
-			InputStream is = Helpers.class.getResourceAsStream(Helpers.DEFAULTFONTPATH);
-			Font font = Font.createFont(Font.TRUETYPE_FONT, is);
-			TEXTAREA_FONT = font.deriveFont(10.0f);
-		}
-		catch (Exception ex)
-		{
-			Log.error("Could not load font!", ex);
-			TEXTAREA_FONT = new Font(Font.MONOSPACED, Font.PLAIN, 10);
 		}
 	}
 	
@@ -1064,27 +1035,7 @@ public class Helpers
 
 		return new java.awt.Point(x, y);
 	}
-	/**
-	 * Register the droplistener to all components... 
-	 * @since: 12.10.2007
-	 * @param list ArrayList of resulting DropTarget-Classes
-	 * @param basePanel
-	 * @param myListener
-	 */
-	public static void registerDropListener(ArrayList<DropTarget> list, Container basePanel, PlaylistDropListener myListener)
-	{
-		list.add(new DropTarget(basePanel, DnDConstants.ACTION_COPY_OR_MOVE, myListener));
-	    
-    	Component[] components = basePanel.getComponents();
-	    for (int i=0; i<components.length; i++)
-	    {
-		    Component component = components[i];
-		    if (component instanceof Container)
-		    	registerDropListener(list, (Container)component, myListener);
-		    else
-		    	list.add(new DropTarget(component, DnDConstants.ACTION_COPY_OR_MOVE, myListener));
-	    }
-	}
+
 	/**
 	 * Compares to URLs and returns true, if they are equal and OK. This is done via
 	 * the URI - as URLs do a domain name lookup which will block if no
@@ -1370,57 +1321,7 @@ public class Helpers
 		Log.info("Illegal filename specification: " + inputFileName + " in playlist " + baseURL);
 		return null;
 	}
-	/**
-	 * Retrieves a java.io.File object via FileChooser
-	 * @since 01.07.2006
-	 * @param parent can be null. If not, the filechooser is centered to the component
-	 * @param showDir can be null. Is the start directory to begin the search or a preselected file
-	 * @param action a String for the "open File"-Button
-	 * @param filter a FileChooserFilter
-	 * @param type 0=load-Mod 1=save-mode
-	 * @param multiFileSelection true: multiple Files can be selected
-	 * @return
-	 * @since 23.03.2011
-	 */
-	public static FileChooserResult selectFileNameFor(final java.awt.Component parent, final String showDir, final String action, final FileFilter[] filter, final int type, final boolean multiFileSelection)
-	{
-		String dir = (showDir==null)?HOMEDIR:showDir;
-		// Try to work with URL - map "dir" to a local File
-		try
-		{
-			final File f = new File(dir);
-			dir = f.getCanonicalPath();
-		}
-		catch (Exception ex)
-		{
-			Log.error("Helpers::selectFileNameFor", ex);
-		}
-		
-		final File theFile = new File(dir);
-		File theDirectory = new File(dir);
-	    while (theDirectory!=null && (!theDirectory.isDirectory() || !theDirectory.exists()))
-	    {
-	    	theDirectory = theDirectory.getParentFile();
-	    }
-	    final javax.swing.JFileChooser chooser = new javax.swing.JFileChooser(theDirectory);
-	    if (filter!=null)
-	    {
-	    	for (int i=filter.length-1; i>=0; i--) // count downwards 'cause the last one is the default
-	    		chooser.addChoosableFileFilter(filter[i]);
-	    }
-	    if (!theFile.isDirectory()) chooser.setSelectedFile(theFile);
-	    chooser.setApproveButtonText(action);
-	    chooser.setMultiSelectionEnabled(multiFileSelection);
-	    final int result = (type==0)?chooser.showOpenDialog(parent):chooser.showSaveDialog(parent);
-
-	    if (result==javax.swing.JFileChooser.APPROVE_OPTION)
-	    {
-	    	File [] selectedFiles = (multiFileSelection)?chooser.getSelectedFiles(): new File[] { chooser.getSelectedFile() };
-	    	return new FileChooserResult(chooser.getFileFilter(), selectedFiles);
-	    }
-	    else
-	    	return null;
-	}
+	
 	/**
 	 * @since 05.01.2008
 	 * @param location
@@ -1599,16 +1500,7 @@ public class Helpers
 
 		// The following are essential for registration at the MultimediaContainerManager
 		Class.forName("de.quippy.javamod.multimedia.mod.ModContainer"); // ModContainer uses the ModFactory!!
-		Class.forName("de.quippy.javamod.multimedia.wav.WavContainer");
-		Class.forName("de.quippy.javamod.multimedia.mp3.MP3Container");
-		Class.forName("de.quippy.javamod.multimedia.ogg.OGGContainer");
-		Class.forName("de.quippy.javamod.multimedia.ape.APEContainer");
-		Class.forName("de.quippy.javamod.multimedia.flac.FLACContainer");
-		Class.forName("de.quippy.javamod.multimedia.midi.MidiContainer");
-		Class.forName("de.quippy.javamod.multimedia.sid.SIDContainer");
 		
-		// SID WAVE Loading
-		Class.forName("de.quippy.sidplay.resid_builder.resid.Wave");
 	}
 	/**
 	 * Opens a txt-File on the server containing the current populated
@@ -1679,67 +1571,5 @@ public class Helpers
 		if (!t1.hasMoreTokens() && t2.hasMoreTokens()) return -1;
 		return 0;
 	}
-	/**
-	 * @since 19.10.2008
-	 * @param destination
-	 * @param bar A JProgressBar or null
-	 * @return
-	 */
-	public static int downloadJavaMod(File destination, SimpleProgessDialog bar)
-	{
-		try
-		{
-			URL javamod_url = new URL(JAVAMOD_URL);
-			return copyFromURL(javamod_url, destination, bar);
-		}
-		catch (Throwable ex)
-		{
-			Log.error("CheckForUpdate failed", ex);
-		}
-		return -1;
-	}
-	/**
-	 * @since 22.04.2012
-	 * @param destination
-	 * @param fromURL
-	 */
-	public static int copyFromURL(URL fromURL, File destination, SimpleProgessDialog bar)
-	{
-    	int copied = 0;
-		InputStream in = null;
-    	OutputStream out = null;
-    	try
-    	{
-			if (destination.createNewFile())
-			{
-				URLConnection conn = fromURL.openConnection();
-				if (bar!=null)
-				{
-					bar.setMinimum(0);
-					bar.setMaximum(conn.getContentLength());
-				}
-				in = new BufferedInputStream(conn.getInputStream());
-	    		out = new BufferedOutputStream(new FileOutputStream(destination));
-	    		final byte[] input = new byte[8192];
-	    		int len;
-	    		while ((len = in.read(input, 0, 8192))!=-1)
-	    		{
-	    			out.write(input, 0, len);
-					copied += len;
-					if (bar!=null) bar.setValue(copied);
-	    		}
-	    		out.flush();
-			}
-    	}
-    	catch (Throwable ex)
-    	{
-			Log.error("CopyFromURL failed", ex);
-    	}
-    	finally
-    	{
-    		if (in!=null) try { in.close(); } catch (IOException ex) { /*NOOP*/ }
-    		if (out!=null) try { out.close(); } catch (IOException ex) { /*NOOP*/ }
-    	}
-    	return copied;
-	}
+
 }

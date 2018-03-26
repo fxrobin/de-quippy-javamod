@@ -24,14 +24,11 @@ package de.quippy.javamod.multimedia.mod;
 import java.net.URL;
 import java.util.Properties;
 
-import javax.swing.JPanel;
-
 import de.quippy.javamod.mixer.Mixer;
 import de.quippy.javamod.multimedia.MultimediaContainer;
 import de.quippy.javamod.multimedia.MultimediaContainerManager;
 import de.quippy.javamod.multimedia.mod.loader.Module;
 import de.quippy.javamod.multimedia.mod.loader.ModuleFactory;
-import de.quippy.javamod.system.Helpers;
 import de.quippy.javamod.system.Log;
 
 /**
@@ -82,8 +79,6 @@ public class ModContainer extends MultimediaContainer
 
 	private Module currentMod;
 	private ModMixer currentMixer;
-	private ModInfoPanel modInfoPanel;
-	private ModConfigPanel modConfigPanel;
 	
 	/**
 	 * Will be executed during class load
@@ -116,10 +111,6 @@ public class ModContainer extends MultimediaContainer
 			{
 				Log.error("[ModContainer] Failed with loading of " + url.toString(), new Exception("Modfile "+url.toString()+" is obviously corrupt!"));
 				result = null;
-			}
-			else
-			{
-				((ModInfoPanel)getInfoPanel()).fillInfoPanelWith(currentMod);
 			}
 		}
 		catch (Exception ex)
@@ -159,11 +150,6 @@ public class ModContainer extends MultimediaContainer
 			final Module theMod = ModuleFactory.getInstance(url);
 			final String modSongName = theMod.getSongName();
 			if (modSongName!=null && modSongName.trim().length()!=0) songName = modSongName;
-			final ModConfigPanel configPanel = (ModConfigPanel)getConfigPanel();
-			int loopValue = configPanel.getLoopValue();
-			if (loopValue == Helpers.PLAYER_LOOP_DEACTIVATED) loopValue = Helpers.PLAYER_LOOP_IGNORE;
-			ModMixer theMixer = new ModMixer(theMod, 8, 1, 1000, 0, false, false, false, loopValue, 25);
-			duration = Long.valueOf(theMixer.getLengthInMilliseconds());
 		}
 		catch (Throwable ex)
 		{
@@ -179,31 +165,7 @@ public class ModContainer extends MultimediaContainer
 	{
 		return true;
 	}
-	/**
-	 * @return
-	 * @since 13.10.2007
-	 * @see de.quippy.javamod.multimedia.MultimediaContainer#getInfoPanel()
-	 */
-	@Override
-	public JPanel getInfoPanel()
-	{
-		if (modInfoPanel==null) modInfoPanel = new ModInfoPanel();
-		return modInfoPanel;
-	}
-	/**
-	 * @return
-	 * @see de.quippy.javamod.multimedia.MultimediaContainer#getConfigPanel()
-	 */
-	@Override
-	public JPanel getConfigPanel()
-	{
-		if (modConfigPanel==null)
-		{
-			modConfigPanel = new ModConfigPanel();
-			modConfigPanel.setParentContainer(this);
-		}
-		return modConfigPanel;
-	}
+	
 	/**
 	 * @see de.quippy.javamod.multimedia.MultimediaContainerInterface#getFileExtensionList()
 	 * @since: 12.10.2007
@@ -230,16 +192,7 @@ public class ModContainer extends MultimediaContainer
 	@Override
 	public void configurationChanged(Properties props)
 	{
-		ModConfigPanel configPanel = (ModConfigPanel)getConfigPanel();
-		configPanel.getPlayerSetUp_SampleRate().setSelectedItem(props.getProperty(PROPERTY_PLAYER_FREQUENCY, DEFAULT_SAMPLERATE));
-		configPanel.getPlayerSetUp_BufferSize().setSelectedItem(props.getProperty(PROPERTY_PLAYER_MSBUFFERSIZE, DEFAULT_MSBUFFERSIZE));
-		configPanel.getPlayerSetUp_BitsPerSample().setSelectedItem(props.getProperty(PROPERTY_PLAYER_BITSPERSAMPLE, DEFAULT_BITSPERSAMPLE)); 
-		configPanel.getPlayerSetUp_Channels().setSelectedItem(props.getProperty(PROPERTY_PLAYER_STEREO, DEFAULT_CHANNEL)); 
-		configPanel.getPlayerSetUp_Interpolation().setSelectedIndex(Integer.parseInt(props.getProperty(PROPERTY_PLAYER_ISP, DEFAULT_INTERPOLATION_INDEX)));
-		configPanel.getPlayerSetUp_WideStereoMix().setSelected(Boolean.parseBoolean(props.getProperty(PROPERTY_PLAYER_WIDESTEREOMIX, DEFAULT_WIDESTEREOMIX)));
-		configPanel.getPlayerSetUp_NoiseReduction().setSelected(Boolean.parseBoolean(props.getProperty(PROPERTY_PLAYER_NOISEREDUCTION, DEFAULT_NOISEREDUCTION)));
-		configPanel.getPlayerSetUp_MegaBass().setSelected(Boolean.parseBoolean(props.getProperty(PROPERTY_PLAYER_MEGABASS, DEFAULT_MEGABASS)));
-		configPanel.setLoopValue(Integer.parseInt(props.getProperty(PROPERTY_PLAYER_NOLOOPS, DEFAULT_NOLOOPS)));
+		
 	}
 	/**
 	 * Get the values from the gui and store them into the main Propertys
@@ -248,16 +201,7 @@ public class ModContainer extends MultimediaContainer
 	@Override
 	public void configurationSave(Properties props)
 	{
-		ModConfigPanel configPanel = (ModConfigPanel)getConfigPanel();
-		props.setProperty(PROPERTY_PLAYER_FREQUENCY, configPanel.getPlayerSetUp_SampleRate().getSelectedItem().toString());
-		props.setProperty(PROPERTY_PLAYER_MSBUFFERSIZE, configPanel.getPlayerSetUp_BufferSize().getSelectedItem().toString());
-		props.setProperty(PROPERTY_PLAYER_BITSPERSAMPLE, configPanel.getPlayerSetUp_BitsPerSample().getSelectedItem().toString());
-		props.setProperty(PROPERTY_PLAYER_STEREO, configPanel.getPlayerSetUp_Channels().getSelectedItem().toString());
-		props.setProperty(PROPERTY_PLAYER_ISP, Integer.toString(configPanel.getPlayerSetUp_Interpolation().getSelectedIndex()));
-		props.setProperty(PROPERTY_PLAYER_WIDESTEREOMIX, Boolean.toString(configPanel.getPlayerSetUp_WideStereoMix().isSelected()));
-		props.setProperty(PROPERTY_PLAYER_NOISEREDUCTION, Boolean.toString(configPanel.getPlayerSetUp_NoiseReduction().isSelected()));
-		props.setProperty(PROPERTY_PLAYER_MEGABASS, Boolean.toString(configPanel.getPlayerSetUp_MegaBass().isSelected()));
-		props.setProperty(PROPERTY_PLAYER_NOLOOPS, Integer.toString(configPanel.getLoopValue()));
+		
 	}
 	/**
 	 * @see de.quippy.javamod.multimedia.MultimediaContainer#createNewMixer()

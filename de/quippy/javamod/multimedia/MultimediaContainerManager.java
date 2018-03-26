@@ -118,12 +118,7 @@ public class MultimediaContainerManager
 		for (int i=0; i<extensions.length; i++)
 			getFileExtensionMap().remove(extensions[i]);
 	}
-	public static void updateLookAndFeel()
-	{
-		ArrayList<MultimediaContainer> listeners = getContainerArray();
-		for (int i=0; i<listeners.size(); i++)
-			listeners.get(i).updateLookAndFeel();
-	}
+	
 	public static String[] getSupportedFileExtensions()
 	{
 		Set<String> keys = getFileExtensionMap().keySet();
