@@ -121,17 +121,21 @@ public class AudioProcessor
 				{
 					int channels = me.audioFormat.getChannels();
 					int currentReadPosition = (int)((me.getFramePosition() * channels) % me.sampleBufferSize);
-					for (int i=0; i<me.desiredBufferSize; i++)
+					
+					if (me.sampleBuffer !=null)
 					{
-						if (currentReadPosition>=me.sampleBufferSize) currentReadPosition = 0;
-						if (channels==2)
+						for (int i=0; i<me.desiredBufferSize; i++)
 						{
-							leftBuffer[i] = me.sampleBuffer[currentReadPosition++];
-							rightBuffer[i] = me.sampleBuffer[currentReadPosition++];
-						}
-						else
-						{
-							leftBuffer[i] = rightBuffer[i] = me.sampleBuffer[currentReadPosition++];
+							if (currentReadPosition>=me.sampleBufferSize) currentReadPosition = 0;
+							if (channels==2)
+							{
+								leftBuffer[i] = me.sampleBuffer[currentReadPosition++];
+								rightBuffer[i] = me.sampleBuffer[currentReadPosition++];
+							}
+							else
+							{
+								leftBuffer[i] = rightBuffer[i] = me.sampleBuffer[currentReadPosition++];
+							}
 						}
 					}
 				}
