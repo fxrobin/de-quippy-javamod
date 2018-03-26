@@ -82,6 +82,22 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	{
 		this(new File(fileName));
 	}
+	
+	public RandomAccessInputStreamImpl(InputStream in) throws IOException
+	{
+		int size = in.available();
+		if (size<1024) size = 1024;
+		ByteArrayOutputStream out = new ByteArrayOutputStream(size);		
+		copyFullStream(in, out);
+		in.close();
+		out.close();
+		buffer = out.toByteArray();
+		bufferLength = buffer.length;
+		readPointer = 0;
+		raFile = null;
+		localFile = null;
+	}
+	
 	public RandomAccessInputStreamImpl(URL fromUrl) throws IOException, FileNotFoundException
 	{
 		super();

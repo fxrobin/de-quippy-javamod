@@ -24,6 +24,7 @@ package de.quippy.javamod.io;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 
@@ -61,6 +62,19 @@ public class ModfileInputStream extends RandomAccessInputStreamImpl
 		this.fileName = fileName;
 		checkForPackedFiles();
 	}
+	
+	/**
+	 * Constructor for ModfileInputStream
+	 * @param fileName
+	 * @throws FileNotFoundException
+	 */
+	public ModfileInputStream(InputStream in, String fileName) throws FileNotFoundException, IOException
+	{
+		super(in);
+		this.fileName = fileName;
+		checkForPackedFiles();
+	}
+	
 	/**
 	 * Constructor for ModfileInputStream
 	 * @param fromUrl

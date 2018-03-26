@@ -22,6 +22,7 @@
 package de.quippy.javamod.multimedia;
 
 import java.io.File;
+import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -33,6 +34,7 @@ import java.util.Set;
 
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import de.quippy.javamod.multimedia.mod.ModContainer;
 import de.quippy.javamod.system.Helpers;
 import de.quippy.javamod.system.Log;
 
@@ -175,10 +177,22 @@ public class MultimediaContainerManager
 	{
 		return getMultimediaContainer(file.toURI()); 
 	}
+	
 	public static MultimediaContainer getMultimediaContainer(String fileName) throws MalformedURLException, UnsupportedAudioFileException
 	{
 		return getMultimediaContainer(new File(fileName));
 	}
+	
+//	// FX
+//	public static ModContainer getModPlayer(InputStream in) throws MalformedURLException, UnsupportedAudioFileException
+//	{
+//		ModContainer container = new ModContainer();
+//		container.
+//		
+//		return container;
+//	}
+	
+	
 	public static void addMultimediaContainerEventListener(MultimediaContainerEventListener listener)
 	{
 		ArrayList<MultimediaContainer> containers = getContainerArray();

@@ -23,6 +23,7 @@ package de.quippy.javamod.multimedia.mod.loader;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import de.quippy.javamod.io.ModfileInputStream;
@@ -104,7 +105,7 @@ public abstract class Module
 	 * - if we differentiate this sum, we get a sum of (a(f)*f)*cos(f*t). Due to
 	 *   f being scaled to the nyquist of the sample frequency, it's always
 	 *   between 0 and 1, and we get just what we want - we decrease the ampli-
-	 *   tude of the low frequencies (and shift the signal's phase by 90°, but
+	 *   tude of the low frequencies (and shift the signal's phase by 90ï¿½, but
 	 *   that's just a side-effect that doesn't have to interest us)
 	 * - the backwards way is simple integrating over the data and is completely
 	 *   lossless. good.
@@ -160,7 +161,7 @@ public abstract class Module
 	 * - The starting bit width is 9 [17]
 	 * - IT2.15 compression simply doubles the differentiation/integration
 	 *   of the signal, thus eliminating low frequencies some more and turning
-	 *   the signal phase to 180° instead of 90° which can eliminate some sig-
+	 *   the signal phase to 180ï¿½ instead of 90ï¿½ which can eliminate some sig-
 	 *   nal peaks here and there - all resulting in a somewhat better ratio.
 	 * 
 	 * ok, but now lets start... but think before you easily somehow misuse
@@ -513,6 +514,9 @@ public abstract class Module
 			if (inputStream!=null) try { inputStream.close(); } catch (Exception ex) { Log.error("IGNORED", ex); }
 		}
 	}
+	
+	
+	
 	/**
 	 * @since 31.12.2007
 	 * @param inputStream

@@ -208,6 +208,27 @@ public class ModContainer extends MultimediaContainer
 	 * @since: 12.10.2007
 	 * @return
 	 */
+	
+	public ModMixer createNewMixer(Module module)
+	{
+		if (currentMod==null) currentMod = module;
+
+		Properties props = new Properties();
+		configurationSave(props);
+		
+		int frequency = Integer.parseInt(props.getProperty(PROPERTY_PLAYER_FREQUENCY, DEFAULT_SAMPLERATE)); 
+		int bitsPerSample = Integer.parseInt(props.getProperty(PROPERTY_PLAYER_BITSPERSAMPLE, DEFAULT_BITSPERSAMPLE)); 
+		int channels = Integer.parseInt(props.getProperty(PROPERTY_PLAYER_STEREO, DEFAULT_CHANNEL));
+		int isp = Integer.parseInt(props.getProperty(PROPERTY_PLAYER_ISP, DEFAULT_INTERPOLATION_INDEX)); 
+		boolean wideStereoMix = Boolean.parseBoolean(props.getProperty(PROPERTY_PLAYER_WIDESTEREOMIX, DEFAULT_WIDESTEREOMIX)); 
+		boolean noiseReduction = Boolean.parseBoolean(props.getProperty(PROPERTY_PLAYER_NOISEREDUCTION, DEFAULT_NOISEREDUCTION));
+		boolean megaBass = Boolean.parseBoolean(props.getProperty(PROPERTY_PLAYER_MEGABASS, DEFAULT_MEGABASS));
+		int loopValue = Integer.parseInt(props.getProperty(PROPERTY_PLAYER_NOLOOPS, DEFAULT_NOLOOPS));
+		int msBufferSize = Integer.parseInt(props.getProperty(PROPERTY_PLAYER_MSBUFFERSIZE, DEFAULT_MSBUFFERSIZE));
+		currentMixer = new ModMixer(module, bitsPerSample, channels, frequency, isp, wideStereoMix, noiseReduction, megaBass, loopValue, msBufferSize);
+		return currentMixer;
+	}
+	
 	@Override
 	public Mixer createNewMixer()
 	{
