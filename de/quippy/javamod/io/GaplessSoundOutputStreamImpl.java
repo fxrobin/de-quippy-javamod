@@ -38,6 +38,7 @@ public class GaplessSoundOutputStreamImpl extends SoundOutputStreamImpl
 	{
 		super();
 	}
+
 	/**
 	 * @param audioFormat
 	 * @param audioProcessor
@@ -50,13 +51,13 @@ public class GaplessSoundOutputStreamImpl extends SoundOutputStreamImpl
 	{
 		super(audioFormat, audioProcessor, exportFile, playDuringExport, keepSilent);
 	}
+
 	/**
-	 * This method will only create a new line if
-	 * a) an AudioFormat is set
-	 * and
-	 * b) no line is open
-	 * c) or the already open Line is not matching the audio format needed
-	 * After creating or reusing the line, status "open" and "running" are ensured
+	 * This method will only create a new line if a) an AudioFormat is set and
+	 * b) no line is open c) or the already open Line is not matching the audio
+	 * format needed After creating or reusing the line, status "open" and
+	 * "running" are ensured
+	 * 
 	 * @see de.quippy.javamod.io.SoundOutputStreamImpl#openSourceLine()
 	 * @since 27.02.2011
 	 */
@@ -65,7 +66,7 @@ public class GaplessSoundOutputStreamImpl extends SoundOutputStreamImpl
 	{
 		try
 		{
-			if (audioFormat!=null && (sourceLine==null || (sourceLine != null && !sourceLine.getFormat().matches(audioFormat))))
+			if (audioFormat != null && (sourceLine == null || (sourceLine != null && !sourceLine.getFormat().matches(audioFormat))))
 			{
 				super.openSourceLine();
 			}
@@ -81,6 +82,7 @@ public class GaplessSoundOutputStreamImpl extends SoundOutputStreamImpl
 			Log.error("Error occured when opening audio device", ex);
 		}
 	}
+
 	/**
 	 * 
 	 * @see de.quippy.javamod.io.SoundOutputStreamImpl#open()
@@ -90,12 +92,14 @@ public class GaplessSoundOutputStreamImpl extends SoundOutputStreamImpl
 	public synchronized void open()
 	{
 		close();
-		if (playDuringExport || exportFile==null) 
+		if (playDuringExport || exportFile == null)
 			openSourceLine();
 		else
-			openAudioProcessor(); // open AudioProcessor (DSP-Effekts) when only exporting
+			openAudioProcessor(); // open AudioProcessor (DSP-Effekts) when only
+									// exporting
 		openExportFile();
 	}
+
 	/**
 	 * 
 	 * @see de.quippy.javamod.io.SoundOutputStreamImpl#close()
@@ -105,18 +109,21 @@ public class GaplessSoundOutputStreamImpl extends SoundOutputStreamImpl
 	public synchronized void close()
 	{
 		// close Processor, when it was opend only for export
-		if (!playDuringExport && exportFile!=null) closeAudioProcessor();
+		if (!playDuringExport && exportFile != null) closeAudioProcessor();
 		closeExportFile();
 	}
+
 	/**
-	 * This method is needed to close all devices as the gapless
-	 * stream does a close on the line only, if audio formats don't match
+	 * This method is needed to close all devices as the gapless stream does a
+	 * close on the line only, if audio formats don't match
+	 * 
 	 * @since 27.02.2011
 	 */
 	public synchronized void closeAllDevices()
 	{
 		super.close();
 	}
+
 	/**
 	 * @param newAudioFormat
 	 * @see de.quippy.javamod.io.SoundOutputStreamImpl#changeAudioFormatTo(javax.sound.sampled.AudioFormat)

@@ -30,8 +30,8 @@ import de.quippy.javamod.multimedia.mod.loader.Module;
 public class InstrumentsContainer
 {
 	private Module parent;
-	private Instrument [] instruments;
-	private Sample [] samples;
+	private Instrument[] instruments;
+	private Sample[] samples;
 
 	/**
 	 * Constructor for InstrumentsContainer
@@ -40,40 +40,45 @@ public class InstrumentsContainer
 	{
 		super();
 		this.parent = module;
-		
-		if (anzInstruments!=0) 
-			this.instruments = new Instrument[anzInstruments]; 
-		else 
+
+		if (anzInstruments != 0)
+			this.instruments = new Instrument[anzInstruments];
+		else
 			this.instruments = null;
-		
-		if (anzSamples!=0)
+
+		if (anzSamples != 0)
 			this.samples = new Sample[anzSamples];
 		else
 			this.samples = null;
 	}
+
 	/**
-	 * With XM-Mods we do not know the real ammount
-	 * of samples at startup
+	 * With XM-Mods we do not know the real ammount of samples at startup
+	 * 
 	 * @since 01.11.2007
 	 * @param newAmount
 	 */
 	public void reallocSampleSpace(int newAmount)
 	{
-		Sample [] newSamples = new Sample[newAmount];
-		if (this.samples!=null)
+		Sample[] newSamples = new Sample[newAmount];
+		if (this.samples != null)
 		{
-			//System.arraycopy(this.samples, 0, newSamples, this.samples.length);
-			for (int i=0; i<this.samples.length; i++)
+			// System.arraycopy(this.samples, 0, newSamples,
+			// this.samples.length);
+			for (int i = 0; i < this.samples.length; i++)
 				newSamples[i] = this.samples[i];
 		}
 		this.samples = newSamples;
 	}
+
 	public void setInstrument(int index, Instrument instrument)
 	{
 		instruments[index] = instrument;
 	}
+
 	/**
 	 * Stores the sample with desired index
+	 * 
 	 * @since 19.06.2006
 	 * @param index
 	 * @param sample
@@ -82,48 +87,54 @@ public class InstrumentsContainer
 	{
 		this.samples[index] = sample;
 	}
+
 	/**
 	 * returns the sample with the index
+	 * 
 	 * @since 19.06.2006
 	 * @param sampleIndex
 	 * @return
 	 */
 	public Sample getSample(int sampleIndex)
 	{
-		if (samples==null || sampleIndex>=samples.length || sampleIndex<0)
+		if (samples == null || sampleIndex >= samples.length || sampleIndex < 0)
 			return null;
 		else
 			return samples[sampleIndex];
 	}
+
 	/**
-	 * Add all sample length values to retrive the complete
-	 * amount. Is used only by the ProtrackerMods
+	 * Add all sample length values to retrive the complete amount. Is used only
+	 * by the ProtrackerMods
+	 * 
 	 * @since 19.06.2006
 	 * @return
 	 */
 	public int getFullSampleLength()
 	{
-		int fullSampleLength=0;
-		for (int i=0; i<samples.length; i++)
-			fullSampleLength+=samples[i].length;
+		int fullSampleLength = 0;
+		for (int i = 0; i < samples.length; i++)
+			fullSampleLength += samples[i].length;
 		return fullSampleLength;
 	}
+
 	/**
 	 * returns the instrument with the index
+	 * 
 	 * @since 19.06.2006
 	 * @param sampleIndex
 	 * @return
 	 */
 	public Instrument getInstrument(int index)
 	{
-		if (instruments==null)
+		if (instruments == null)
 			return null;
-		else
-		if (index>=instruments.length) 
+		else if (index >= instruments.length)
 			return null;
 		else
 			return instruments[index];
 	}
+
 	/**
 	 * @return the instruments
 	 */
@@ -131,6 +142,7 @@ public class InstrumentsContainer
 	{
 		return instruments;
 	}
+
 	/**
 	 * @return the samples
 	 */
@@ -138,6 +150,7 @@ public class InstrumentsContainer
 	{
 		return samples;
 	}
+
 	/**
 	 * @return the parent
 	 */
@@ -145,6 +158,7 @@ public class InstrumentsContainer
 	{
 		return parent;
 	}
+
 	/**
 	 * @return
 	 * @see java.lang.Object#toString()
@@ -153,18 +167,18 @@ public class InstrumentsContainer
 	public String toString()
 	{
 		StringBuilder bf = new StringBuilder();
-		
-		if (instruments!=null)
+
+		if (instruments != null)
 		{
-			for (int i=0; i<instruments.length; i++)
+			for (int i = 0; i < instruments.length; i++)
 			{
 				bf.append(instruments[i].toString());
 				bf.append('\n');
 			}
 		}
-		if (samples!=null)
+		if (samples != null)
 		{
-			for (int i=0; i<samples.length; i++)
+			for (int i = 0; i < samples.length; i++)
 			{
 				bf.append(samples[i].toShortString());
 				bf.append('\n');

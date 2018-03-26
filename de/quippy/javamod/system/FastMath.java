@@ -18,8 +18,9 @@
 package de.quippy.javamod.system;
 
 /**
- * This class provides fast mathematical calculations which are good
- * enough for some audio calculations.
+ * This class provides fast mathematical calculations which are good enough for
+ * some audio calculations.
+ * 
  * @author Daniel Becker
  * @since 29.01.2012
  */
@@ -112,8 +113,8 @@ public class FastMath
 
 	public static double atan2(double y, double x)
 	{
-        if (y == 0.0D) return 0.0D;
-        if (x == 0.0D) return (y>0.0D)?hPI:-hPI;
+		if (y == 0.0D) return 0.0D;
+		if (x == 0.0D) return (y > 0.0D) ? hPI : -hPI;
 
 		double abs_y = Math.abs(y);
 		double angle;

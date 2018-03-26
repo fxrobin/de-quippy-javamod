@@ -60,24 +60,27 @@ public abstract class IIRFilterBase
 {
 	protected int frequency;
 	protected int sampleRate;
-    protected static final int HISTORYSIZE = 3;
-    protected float[][] inArray;
-    protected float[][] outArray;
-    protected float alpha;
+	protected static final int HISTORYSIZE = 3;
+	protected float[][] inArray;
+	protected float[][] outArray;
+	protected float alpha;
 	protected float beta;
 	protected float gamma;
 	protected float amplitudeAdj;
 
-    /**
-     * Default Constructor - to already set the GAIN
-     * @since 09.01.2012
-     */
-    public IIRFilterBase()
-    {
-    	super();
-    }
+	/**
+	 * Default Constructor - to already set the GAIN
+	 * 
+	 * @since 09.01.2012
+	 */
+	public IIRFilterBase()
+	{
+		super();
+	}
+
 	/**
 	 * Call this to initialize. Will set the memory to 0
+	 * 
 	 * @since 09.01.2012
 	 */
 	public void initialize(final int sampleRate, final int channels, final int frequency, final float parameter)
@@ -88,23 +91,27 @@ public abstract class IIRFilterBase
 		outArray = new float[channels][HISTORYSIZE];
 		clearHistory();
 	}
+
 	/**
 	 * Clean the history
+	 * 
 	 * @since 14.01.2012
 	 */
 	public void clearHistory()
 	{
 		int channels = inArray.length;
-		for (int c=0; c<channels; c++)
+		for (int c = 0; c < channels; c++)
 		{
-			for (int i=0; i<HISTORYSIZE; i++)
+			for (int i = 0; i < HISTORYSIZE; i++)
 			{
 				inArray[c][i] = outArray[c][i] = 0f;
 			}
 		}
 	}
+
 	/**
 	 * Convert from decimalValue to DeciBel
+	 * 
 	 * @since 14.01.2012
 	 * @param dbValue
 	 * @return
@@ -112,30 +119,36 @@ public abstract class IIRFilterBase
 	public static float getIIRDecimalValueFrom(float dbValue)
 	{
 		double decimalValue = Math.pow(10, dbValue / 20.0);
-		return (float)((decimalValue<1.0)?-decimalValue:decimalValue);
+		return (float) ((decimalValue < 1.0) ? -decimalValue : decimalValue);
 	}
+
 	/**
 	 * convert from DeciBel to decimalValue
+	 * 
 	 * @since 14.01.2012
 	 * @param decimalValue
 	 * @return
 	 */
 	public static float getIIRDBValueFrom(final float decimalValue)
 	{
-		return (float)Math.log10((decimalValue<0)?-decimalValue:decimalValue)*20.0f;
+		return (float) Math.log10((decimalValue < 0) ? -decimalValue : decimalValue) * 20.0f;
 	}
+
 	/**
 	 * Given a frequency of interest, calculate radians/sample
+	 * 
 	 * @since 07.01.2012
 	 * @param freq
 	 * @return
 	 */
 	protected float calcRadiansPerSample(float freq)
 	{
-		return (float)((2.0 * Math.PI * freq) / sampleRate);
+		return (float) ((2.0 * Math.PI * freq) / sampleRate);
 	}
+
 	/**
 	 * Return the radiant per sample at the frequency of interest
+	 * 
 	 * @since 07.01.2012
 	 * @return
 	 */
@@ -143,9 +156,11 @@ public abstract class IIRFilterBase
 	{
 		return calcRadiansPerSample(frequency);
 	}
+
 	/**
-	 * Set the amplitude adjustment to be applied to filtered data
-	 * Values typically range from -.25 to +4.0.
+	 * Set the amplitude adjustment to be applied to filtered data Values
+	 * typically range from -.25 to +4.0.
+	 * 
 	 * @param amplitudeAdj
 	 * @since 09.01.2012
 	 */
@@ -153,13 +168,16 @@ public abstract class IIRFilterBase
 	{
 		amplitudeAdj = newAmplitudeAdj;
 	}
+
 	public float getAmplitudeAdj()
 	{
 		return amplitudeAdj;
 	}
+
 	/**
-	 * Set the amplitude adjustment to be applied to filtered data
-	 * Values typically range from -12 to +12 db.
+	 * Set the amplitude adjustment to be applied to filtered data Values
+	 * typically range from -12 to +12 db.
+	 * 
 	 * @param dbValue
 	 * @since 13.01.2012
 	 */
@@ -167,8 +185,10 @@ public abstract class IIRFilterBase
 	{
 		setAmplitudeAdj(IIRFilterBase.getIIRDecimalValueFrom(dbValue));
 	}
+
 	/**
 	 * Get the amplitude adjustment in db value
+	 * 
 	 * @since 14.01.2012
 	 * @return
 	 */
@@ -176,6 +196,7 @@ public abstract class IIRFilterBase
 	{
 		return getIIRDBValueFrom(getAmplitudeAdj());
 	}
+
 	/**
 	 * @param sample
 	 * @param channel

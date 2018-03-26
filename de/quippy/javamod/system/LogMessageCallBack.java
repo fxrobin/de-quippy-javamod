@@ -30,6 +30,8 @@ import java.util.EventListener;
 public interface LogMessageCallBack extends EventListener
 {
 	public void error(String message, Throwable ex);
+
 	public void info(String message);
+
 	public void debug(String message);
 }

@@ -33,15 +33,17 @@ import de.quippy.javamod.system.Log;
 
 /**
  * We here add special read methods for ModFiles ;)
+ * 
  * @author Daniel Becker
  * @since 31.12.2007
  */
 public class ModfileInputStream extends RandomAccessInputStreamImpl
 {
 	private String fileName;
-	
+
 	/**
 	 * Constructor for ModfileInputStream
+	 * 
 	 * @param file
 	 * @throws FileNotFoundException
 	 */
@@ -51,8 +53,10 @@ public class ModfileInputStream extends RandomAccessInputStreamImpl
 		this.fileName = file.getAbsolutePath();
 		checkForPackedFiles();
 	}
+
 	/**
 	 * Constructor for ModfileInputStream
+	 * 
 	 * @param fileName
 	 * @throws FileNotFoundException
 	 */
@@ -62,9 +66,10 @@ public class ModfileInputStream extends RandomAccessInputStreamImpl
 		this.fileName = fileName;
 		checkForPackedFiles();
 	}
-	
+
 	/**
 	 * Constructor for ModfileInputStream
+	 * 
 	 * @param fileName
 	 * @throws FileNotFoundException
 	 */
@@ -74,9 +79,10 @@ public class ModfileInputStream extends RandomAccessInputStreamImpl
 		this.fileName = fileName;
 		checkForPackedFiles();
 	}
-	
+
 	/**
 	 * Constructor for ModfileInputStream
+	 * 
 	 * @param fromUrl
 	 * @throws IOException
 	 * @throws FileNotFoundException
@@ -88,6 +94,7 @@ public class ModfileInputStream extends RandomAccessInputStreamImpl
 		this.fileName = Helpers.createLocalFileStringFromURL(fromUrl, false);
 		checkForPackedFiles();
 	}
+
 	/**
 	 * @return the fileName
 	 */
@@ -95,6 +102,7 @@ public class ModfileInputStream extends RandomAccessInputStreamImpl
 	{
 		return fileName;
 	}
+
 	private void checkForPackedFiles()
 	{
 		try
@@ -109,8 +117,7 @@ public class ModfileInputStream extends RandomAccessInputStreamImpl
 				bufferLength = buffer.length;
 				readPointer = 0;
 			}
-			else
-			if (XpkSqsh.isXPK_SQSH(this))
+			else if (XpkSqsh.isXPK_SQSH(this))
 			{
 				XpkSqsh xpkSqshFile = new XpkSqsh(this);
 				close();
@@ -126,6 +133,7 @@ public class ModfileInputStream extends RandomAccessInputStreamImpl
 			Log.error("ModfileInputStream::checkForPowerPackerFile", ex);
 		}
 	}
+
 	/**************************************************************************/
 	/**
 	 * @since 31.12.2007
@@ -135,43 +143,48 @@ public class ModfileInputStream extends RandomAccessInputStreamImpl
 	 */
 	public String readString(int strLength) throws IOException
 	{
-		byte [] buffer = new byte[strLength];
+		byte[] buffer = new byte[strLength];
 		int read = read(buffer, 0, strLength);
 		return Helpers.retrieveAsString(buffer, 0, read);
 	}
+
 	/**
 	 * @since 31.12.2007
 	 */
 	public int readByteAsInt() throws IOException
 	{
-		return ((int)readByte())&0xFF;
+		return ((int) readByte()) & 0xFF;
 	}
+
 	/**
 	 * @since 31.12.2007
 	 */
 	public int readMotorolaWord() throws IOException
 	{
-		return ((readByte()&0xFF)<<8) | (readByte()&0xFF);
+		return ((readByte() & 0xFF) << 8) | (readByte() & 0xFF);
 	}
+
 	/**
 	 * @since 31.12.2007
 	 */
 	public int readIntelWord() throws IOException
 	{
-		return (readByte()&0xFF) | ((readByte()&0xFF)<<8);
+		return (readByte() & 0xFF) | ((readByte() & 0xFF) << 8);
 	}
+
 	/**
 	 * @since 31.12.2007
 	 */
 	public int readMotorolaDWord() throws IOException
 	{
-		return ((readByte()&0xFF)<<24) | ((readByte()&0xFF)<<16) | ((readByte()&0xFF)<<8) | (readByte()&0xFF);
+		return ((readByte() & 0xFF) << 24) | ((readByte() & 0xFF) << 16) | ((readByte() & 0xFF) << 8) | (readByte() & 0xFF);
 	}
+
 	/**
 	 * @since 31.12.2007
 	 */
 	public int readIntelDWord() throws IOException
 	{
-		return (readByte()&0xFF) | ((readByte()&0xFF)<<8) | ((readByte()&0xFF)<<16) | ((readByte()&0xFF)<<24);
+		return (readByte() & 0xFF) | ((readByte() & 0xFF) << 8) | ((readByte() & 0xFF) << 16) | ((readByte() & 0xFF) << 24);
 	}
 }

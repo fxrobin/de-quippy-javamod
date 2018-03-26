@@ -26,41 +26,71 @@ import java.io.IOException;
 
 /**
  * Interface for the RandomAccessInputStream that is used by ModfileInputStream
+ * 
  * @author Daniel Becker
  * @since 10.09.2009
  */
 public interface RandomAccessInputStream
 {
 	public File getFile();
-	// InputStream functions - normally implemented due to extending from InputStream
+
+	// InputStream functions - normally implemented due to extending from
+	// InputStream
 	public int available() throws IOException;
+
 	public void close() throws IOException;
+
 	public void mark(int readlimit);
+
 	public boolean markSupported();
+
 	public int read() throws IOException;
+
 	public int read(byte[] b, int off, int len) throws IOException;
+
 	public int read(byte[] b) throws IOException;
+
 	public void reset() throws IOException;
+
 	public long skip(long n) throws IOException;
+
 	// New functions
 	public long getFilePointer() throws IOException;
+
 	public void seek(long pos) throws IOException;
+
 	public byte readByte() throws IOException;
+
 	public long getLength() throws IOException;
+
 	// RandomAccessFile functions
 	public int skipBytes(int n) throws IOException;
+
 	public long length() throws IOException;
+
 	public int readFully(byte[] b) throws IOException;
+
 	public int readFully(byte[] b, int offs, int len) throws IOException;
+
 	public boolean readBoolean() throws IOException;
+
 	public char readChar() throws IOException;
+
 	public short readShort() throws IOException;
+
 	public double readDouble() throws IOException;
+
 	public float readFloat() throws IOException;
+
 	public int readInt() throws IOException;
+
 	public String readLine() throws IOException;
+
 	public long readLong() throws IOException;
+
 	public int readUnsignedByte() throws IOException;
+
 	public int readUnsignedShort() throws IOException;
+
 	public String readUTF() throws IOException;
 }

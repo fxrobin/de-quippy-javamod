@@ -28,31 +28,48 @@ import javax.sound.sampled.AudioFormat;
 import de.quippy.javamod.io.wav.WaveFile;
 import de.quippy.javamod.mixer.dsp.AudioProcessor;
 
-
 /**
- * @author Daniel Becker
- * This Interface describes a soundoutput stream for playback
+ * @author Daniel Becker This Interface describes a soundoutput stream for
+ *         playback
  * @since 02.10.2010
  */
 public interface SoundOutputStream
 {
 	public void open();
+
 	public void close();
+
 	public void closeAllDevices();
+
 	public boolean isInitialized();
+
 	public void startLine();
+
 	public void stopLine();
+
 	public void writeSampleData(byte[] samples, int start, int length);
+
 	public void setInternalFramePosition(long newPosition);
+
 	public long getFramePosition();
+
 	public void setVolume(float gain);
+
 	public void setBalance(float balance);
+
 	public void setAudioProcessor(AudioProcessor audioProcessor);
+
 	public void setExportFile(File exportFile);
+
 	public void setWaveExportFile(WaveFile waveExportFile);
+
 	public void setPlayDuringExport(boolean playDuringExport);
+
 	public void setKeepSilent(boolean keepSilent);
+
 	public void changeAudioFormatTo(AudioFormat newFormat);
+
 	public AudioFormat getAudioFormat();
+
 	public boolean matches(SoundOutputStream otherStream);
 }

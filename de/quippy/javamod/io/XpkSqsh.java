@@ -20,8 +20,7 @@ package de.quippy.javamod.io;
 import java.io.IOException;
 
 /**
- * This code is from the class gamod.unpack.XpkSqsh
- * by Josef Jelinek
+ * This code is from the class gamod.unpack.XpkSqsh by Josef Jelinek
  * 
  * @author Josef Jelinek, Daniel Becker
  * @since 01.04.2013
@@ -29,16 +28,7 @@ import java.io.IOException;
 public class XpkSqsh
 {
 	private static final int HEADER_LENGTH = 36;
-	private static final byte[] OCTETS =
-	{
-	    2, 3, 4, 5, 6, 7, 8, 0,
-	    3, 2, 4, 5, 6, 7, 8, 0,
-	    4, 3, 5, 2, 6, 7, 8, 0,
-	    5, 4, 6, 2, 3, 7, 8, 0,
-	    6, 5, 7, 2, 3, 4, 8, 0,
-	    7, 6, 8, 2, 3, 4, 5, 0,
-	    8, 7, 6, 2, 3, 4, 5, 0,
-	};
+	private static final byte[] OCTETS = { 2, 3, 4, 5, 6, 7, 8, 0, 3, 2, 4, 5, 6, 7, 8, 0, 4, 3, 5, 2, 6, 7, 8, 0, 5, 4, 6, 2, 3, 7, 8, 0, 6, 5, 7, 2, 3, 4, 8, 0, 7, 6, 8, 2, 3, 4, 5, 0, 8, 7, 6, 2, 3, 4, 5, 0, };
 
 	private byte[] buffer;
 
@@ -83,6 +73,7 @@ public class XpkSqsh
 	{
 		buffer = readAndUnpack(input);
 	}
+
 	/**
 	 * @since 01.04.2013
 	 * @return
@@ -91,6 +82,7 @@ public class XpkSqsh
 	{
 		return buffer;
 	}
+
 	/**
 	 * @since 01.04.2013
 	 * @param input
@@ -108,6 +100,7 @@ public class XpkSqsh
 		if (xpkSqshId[8] != 'S' || xpkSqshId[9] != 'Q' || xpkSqshId[10] != 'S' || xpkSqshId[11] != 'H') return false;
 		return true;
 	}
+
 	private byte[] readAndUnpack(RandomAccessInputStream source) throws IOException
 	{
 		source.seek(0); // Just in case...
@@ -122,10 +115,12 @@ public class XpkSqsh
 		if ('S' != a[8] || 'Q' != a[9] || 'S' != a[10] || 'H' != a[11]) return false;
 		return true;
 	}
+
 	private int getLength(byte[] a, int i)
 	{
 		return (a[i] & 0x7F) << 24 | (a[i + 1] & 0xFF) << 16 | (a[i + 2] & 0xFF) << 8 | a[i + 3] & 0xFF;
 	}
+
 	public byte[] unpackData(RandomAccessInputStream source) throws IOException
 	{
 		byte[] data = new byte[16];
@@ -158,21 +153,20 @@ public class XpkSqsh
 			if (headerChecksum != 0) return false;
 			packedLength = (packedLength + 3) & 0xFFFC;
 			if (source.getFilePointer() + packedLength + 1 > source.getLength()) return false;
-			
+
 			final byte[] src = new byte[packedLength];
 			if (source.read(src, 0, packedLength) != packedLength) return false;
-			
+
 			for (int i = 0; i < packedLength; i += 2)
 				dataChecksum ^= (src[i] & 0xFF) << 8 | src[i + 1] & 0xFF;
 			if (dataChecksum != 0) return false;
 			if (dstPos + unpackedLength > dst.length) return false;
-			
+
 			if (chunkType == 0)
 			{
 				System.arraycopy(src, 0, dst, dstPos, unpackedLength);
 			}
-			else 
-			if (chunkType == 1)
+			else if (chunkType == 1)
 			{
 				if (!unsqsh(src, 0, dst, dstPos, dstPos + unpackedLength)) return false;
 			}

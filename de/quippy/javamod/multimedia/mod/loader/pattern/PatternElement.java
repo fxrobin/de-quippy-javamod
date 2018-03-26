@@ -57,6 +57,7 @@ public class PatternElement
 		this.effekt = 0;
 		this.effektOp = 0;
 	}
+
 	/**
 	 * @return
 	 * @see java.lang.Object#toString()
@@ -65,46 +66,72 @@ public class PatternElement
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder(Helpers.getNoteNameToPeriod(noteIndex));
-		if ((period==0 && noteIndex!=0) || (period!=0 && noteIndex==0))
+		if ((period == 0 && noteIndex != 0) || (period != 0 && noteIndex == 0))
 			sb.append('!');
 		else
 			sb.append(' ');
-		if (instrument!=0) sb.append(Helpers.getAsHex(instrument, 2)); else sb.append("..");
-		if (volumeEffekt!=0)
+		if (instrument != 0)
+			sb.append(Helpers.getAsHex(instrument, 2));
+		else
+			sb.append("..");
+		if (volumeEffekt != 0)
 		{
 			switch (volumeEffekt)
 			{
-				case 0x01: sb.append('v'); break;
-				case 0x02: sb.append('d'); break;
-				case 0x03: sb.append('c'); break;
-				case 0x04: sb.append('b'); break;
-				case 0x05: sb.append('a'); break;
-				case 0x06: sb.append('u'); break;
-				case 0x07: sb.append('h'); break;
-				case 0x08: sb.append('p'); break;
-				case 0x09: sb.append('l'); break;
-				case 0x0A: sb.append('r'); break;
-				case 0x0B: sb.append('g'); break;
+				case 0x01:
+					sb.append('v');
+					break;
+				case 0x02:
+					sb.append('d');
+					break;
+				case 0x03:
+					sb.append('c');
+					break;
+				case 0x04:
+					sb.append('b');
+					break;
+				case 0x05:
+					sb.append('a');
+					break;
+				case 0x06:
+					sb.append('u');
+					break;
+				case 0x07:
+					sb.append('h');
+					break;
+				case 0x08:
+					sb.append('p');
+					break;
+				case 0x09:
+					sb.append('l');
+					break;
+				case 0x0A:
+					sb.append('r');
+					break;
+				case 0x0B:
+					sb.append('g');
+					break;
 			}
 			sb.append(Helpers.getAsHex(volumeEffektOp, 2));
 		}
-		else 
+		else
 			sb.append(" ..");
-		
+
 		sb.append(' ');
-		if (effekt!=0)
+		if (effekt != 0)
 		{
-			if (effekt<0x0F)
+			if (effekt < 0x0F)
 				sb.append(Helpers.getAsHex(effekt, 1));
 			else
-				sb.append((char)('F' + effekt - 0x0F));
+				sb.append((char) ('F' + effekt - 0x0F));
 			sb.append(Helpers.getAsHex(effektOp, 2));
 		}
-		else 
+		else
 			sb.append("...");
-		
+
 		return sb.toString();
 	}
+
 	/**
 	 * @return Returns the channel.
 	 */
@@ -112,13 +139,16 @@ public class PatternElement
 	{
 		return channel;
 	}
+
 	/**
-	 * @param channel The channel to set.
+	 * @param channel
+	 *            The channel to set.
 	 */
 	public void setChannel(int channel)
 	{
 		this.channel = channel;
 	}
+
 	/**
 	 * @return Returns the effekt.
 	 */
@@ -126,13 +156,16 @@ public class PatternElement
 	{
 		return effekt;
 	}
+
 	/**
-	 * @param effekt The effekt to set.
+	 * @param effekt
+	 *            The effekt to set.
 	 */
 	public void setEffekt(int effekt)
 	{
 		this.effekt = effekt;
 	}
+
 	/**
 	 * @return Returns the effektOp.
 	 */
@@ -140,13 +173,16 @@ public class PatternElement
 	{
 		return effektOp;
 	}
+
 	/**
-	 * @param effektOp The effektOp to set.
+	 * @param effektOp
+	 *            The effektOp to set.
 	 */
 	public void setEffektOp(int effektOp)
 	{
 		this.effektOp = effektOp;
 	}
+
 	/**
 	 * @return Returns the instrument.
 	 */
@@ -154,13 +190,16 @@ public class PatternElement
 	{
 		return instrument;
 	}
+
 	/**
-	 * @param instrument The instrument to set.
+	 * @param instrument
+	 *            The instrument to set.
 	 */
 	public void setInstrument(int instrument)
 	{
 		this.instrument = instrument;
 	}
+
 	/**
 	 * @return Returns the noteIndex.
 	 */
@@ -168,13 +207,16 @@ public class PatternElement
 	{
 		return noteIndex;
 	}
+
 	/**
-	 * @param noteIndex The noteIndex to set.
+	 * @param noteIndex
+	 *            The noteIndex to set.
 	 */
 	public void setNoteIndex(int noteIndex)
 	{
 		this.noteIndex = noteIndex;
 	}
+
 	/**
 	 * @return Returns the patternIndex.
 	 */
@@ -182,13 +224,16 @@ public class PatternElement
 	{
 		return patternIndex;
 	}
+
 	/**
-	 * @param patternIndex The patternIndex to set.
+	 * @param patternIndex
+	 *            The patternIndex to set.
 	 */
 	public void setPatternIndex(int patternIndex)
 	{
 		this.patternIndex = patternIndex;
 	}
+
 	/**
 	 * @return Returns the period.
 	 */
@@ -196,13 +241,16 @@ public class PatternElement
 	{
 		return period;
 	}
+
 	/**
-	 * @param period The period to set.
+	 * @param period
+	 *            The period to set.
 	 */
 	public void setPeriod(int period)
 	{
 		this.period = period;
 	}
+
 	/**
 	 * @return Returns the row.
 	 */
@@ -210,13 +258,16 @@ public class PatternElement
 	{
 		return row;
 	}
+
 	/**
-	 * @param row The row to set.
+	 * @param row
+	 *            The row to set.
 	 */
 	public void setRow(int row)
 	{
 		this.row = row;
 	}
+
 	/**
 	 * @return Returns the volume.
 	 */
@@ -224,13 +275,16 @@ public class PatternElement
 	{
 		return volumeEffekt;
 	}
+
 	/**
-	 * @param volume The volume to set.
+	 * @param volume
+	 *            The volume to set.
 	 */
 	public void setVolumeEffekt(int volumeEffekt)
 	{
 		this.volumeEffekt = volumeEffekt;
 	}
+
 	/**
 	 * @return Returns the volumeEffektOp.
 	 */
@@ -238,8 +292,10 @@ public class PatternElement
 	{
 		return volumeEffektOp;
 	}
+
 	/**
-	 * @param volumeEffektOp The volumeEffektOp to set.
+	 * @param volumeEffektOp
+	 *            The volumeEffektOp to set.
 	 */
 	public void setVolumeEffektOp(int volumeEffektOp)
 	{

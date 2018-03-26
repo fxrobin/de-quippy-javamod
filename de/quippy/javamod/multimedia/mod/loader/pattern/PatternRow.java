@@ -27,9 +27,9 @@ package de.quippy.javamod.multimedia.mod.loader.pattern;
  */
 public class PatternRow
 {
-	private PatternElement [] patternElement;
+	private PatternElement[] patternElement;
 	private boolean rowPlayed;
-	
+
 	/**
 	 * Constructor for PatternRow
 	 */
@@ -39,6 +39,7 @@ public class PatternRow
 		patternElement = new PatternElement[channels];
 		resetRowPlayed();
 	}
+
 	/**
 	 * @return
 	 * @see java.lang.Object#toString()
@@ -48,10 +49,11 @@ public class PatternRow
 	{
 		StringBuilder sb = new StringBuilder();
 		sb.append(Boolean.toString(rowPlayed)).append(" | ");
-		for (int i=0; i<patternElement.length; i++)
+		for (int i = 0; i < patternElement.length; i++)
 			sb.append(patternElement[i].toString()).append(" | ");
 		return sb.toString();
 	}
+
 	/**
 	 * @since 23.08.2008
 	 */
@@ -59,6 +61,7 @@ public class PatternRow
 	{
 		rowPlayed = false;
 	}
+
 	/**
 	 * @since 23.08.2008
 	 */
@@ -66,6 +69,7 @@ public class PatternRow
 	{
 		rowPlayed = true;
 	}
+
 	/**
 	 * @since 23.08.2008
 	 * @return
@@ -74,6 +78,7 @@ public class PatternRow
 	{
 		return rowPlayed;
 	}
+
 	/**
 	 * @return Returns the patternElement.
 	 */
@@ -81,6 +86,7 @@ public class PatternRow
 	{
 		return patternElement;
 	}
+
 	/**
 	 * @return Returns the patternElement.
 	 */
@@ -88,15 +94,19 @@ public class PatternRow
 	{
 		return patternElement[channel];
 	}
+
 	/**
-	 * @param patternElement The patternElement to set.
+	 * @param patternElement
+	 *            The patternElement to set.
 	 */
 	public void setPatternElement(PatternElement[] patternElement)
 	{
 		this.patternElement = patternElement;
 	}
+
 	/**
-	 * @param patternElement The patternElement to set.
+	 * @param patternElement
+	 *            The patternElement to set.
 	 */
 	public void setPatternElement(int channel, PatternElement patternElement)
 	{

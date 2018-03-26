@@ -24,19 +24,20 @@ package de.quippy.javamod.mixer.dsp.iir.filter;
 import de.quippy.javamod.system.Helpers;
 
 /**
- * This class will do the IIRFilter using an array of filter classes
- * in sequentially order. All filters need to implement a calculation
- * method "performFilterCalculation"
+ * This class will do the IIRFilter using an array of filter classes in
+ * sequentially order. All filters need to implement a calculation method
+ * "performFilterCalculation"
+ * 
  * @author Daniel Becker
  */
 public class IIRFilter
 {
-    private int channels;
-    private int iIndex;
-    private int jIndex;
-    private int kIndex;
-    private int sampleBufferSize;
-    private int filterLength;
+	private int channels;
+	private int iIndex;
+	private int jIndex;
+	private int kIndex;
+	private int sampleBufferSize;
+	private int filterLength;
 	private IIRFilterBase[] filters;
 	private float preAmp;
 
@@ -50,18 +51,20 @@ public class IIRFilter
 		filterLength = theFilters.length;
 		preAmp = 1.0f;
 	}
+
 	public void initialize(int channels, int sampleBufferSize)
 	{
 		this.channels = channels;
 		this.sampleBufferSize = sampleBufferSize;
 		clearHistory();
 	}
+
 	/**
 	 * @since 14.01.2012
 	 */
 	public void clearHistory()
 	{
-		for (int f=0; f<filterLength; f++)
+		for (int f = 0; f < filterLength; f++)
 		{
 			filters[f].clearHistory();
 		}
@@ -69,28 +72,34 @@ public class IIRFilter
 		jIndex = 1; // iIndex - 2
 		kIndex = 2; // iIndex - 1
 	}
+
 	public float getBand(int index)
 	{
 		return filters[index].getGain();
 	}
+
 	public void setBand(int index, float newGain)
 	{
 		filters[index].setGain(newGain);
 	}
+
 	/**
 	 * @return the preAmp
 	 */
 	public float getPreAmp()
 	{
-		return (float)Helpers.getDBValueFrom(preAmp);
+		return (float) Helpers.getDBValueFrom(preAmp);
 	}
+
 	/**
-	 * @param preAmp the preAmp to set
+	 * @param preAmp
+	 *            the preAmp to set
 	 */
 	public void setPreAmp(float newPreAmpDB)
 	{
-		preAmp = (float)Helpers.getDecimalValueFrom(newPreAmpDB);
+		preAmp = (float) Helpers.getDecimalValueFrom(newPreAmpDB);
 	}
+
 	/**
 	 * @since 15.01.2012
 	 * @return
@@ -99,8 +108,10 @@ public class IIRFilter
 	{
 		return filters;
 	}
+
 	/**
 	 * This will perform the filter on the samples
+	 * 
 	 * @param ringBuffer
 	 * @param preAmpedResultBuffer
 	 * @param start
@@ -109,20 +120,20 @@ public class IIRFilter
 	 */
 	public int doFilter(final float[] ringBuffer, final int start, final int length, final int useBands)
 	{
-		final float internalPreAmp = 1f/useBands;
+		final float internalPreAmp = 1f / useBands;
 		final float rest = 1.0f - internalPreAmp;
 		final int end = start + length;
 		int index = start;
 		while (index < end)
 		{
-			for (int c=0; c<channels; c++)
+			for (int c = 0; c < channels; c++)
 			{
 				final int sampleIndex = (index++) % sampleBufferSize;
-				
+
 				float sample = 0;
 				// Run the difference equation
-				final float preAmpedSample = ringBuffer[sampleIndex] * preAmp * internalPreAmp; 
-				for (int f=0; f<useBands; f++)
+				final float preAmpedSample = ringBuffer[sampleIndex] * preAmp * internalPreAmp;
+				for (int f = 0; f < useBands; f++)
 				{
 					IIRFilterBase filter = filters[f];
 					sample += filter.performFilterCalculation(preAmpedSample, c, iIndex, jIndex, kIndex) * filter.amplitudeAdj;

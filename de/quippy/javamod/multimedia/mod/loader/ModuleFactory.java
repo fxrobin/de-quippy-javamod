@@ -185,16 +185,16 @@ public class ModuleFactory
 		Module mod = getModuleFromStreamByID(in);
 		try
 		{
-		if (mod!=null) 
-			return mod.loadModFile(in);
-		else
-		{
-			mod = getModuleFromStream(in);
-			if (mod!=null)
-				return mod;
+			if (mod != null)
+				return mod.loadModFile(in);
 			else
-				throw new IOException("Unsupported MOD-Type: " + in.getFileName());
-		}
+			{
+				mod = getModuleFromStream(in);
+				if (mod != null)
+					return mod;
+				else
+					throw new IOException("Unsupported MOD-Type: " + in.getFileName());
+			}
 		}
 		catch (Exception ex)
 		{

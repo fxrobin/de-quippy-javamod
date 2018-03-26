@@ -25,6 +25,7 @@ import de.quippy.javamod.system.FastMath;
 
 /**
  * This class will be used for audio effects (pitch shift)
+ * 
  * @author Daniel Becker
  * @since 21.01.2012
  */
@@ -67,12 +68,13 @@ public class FFT2
 			final int j = flip[i];
 			if (i < j)
 			{
-				int i2 = i<<1;
-				int j2 = j<<1;
+				int i2 = i << 1;
+				int j2 = j << 1;
 				float temp = fftBuffer[i2];
 				fftBuffer[i2] = fftBuffer[j2];
 				fftBuffer[j2] = temp;
-				i2++; j2++;
+				i2++;
+				j2++;
 				temp = fftBuffer[i2];
 				fftBuffer[i2] = fftBuffer[j2];
 				fftBuffer[j2] = temp;
@@ -90,18 +92,18 @@ public class FFT2
 			final float arg = (float) Math.PI / (float) (le2 >> 1);
 			final float wr = (float) FastMath.fastCos(arg);
 			final float wi = (float) sign * (float) FastMath.fastSin(arg);
-//			int idx = 0;
+			// int idx = 0;
 			for (int j = 0; j < le2; j += 2)
 			{
 				int p1r = j;
 				int p1i = p1r + 1;
 				int p2r = p1r + le2;
 				int p2i = p2r + 1;
-				for (int i = j; i<frameSize<<1; i += le)
+				for (int i = j; i < frameSize << 1; i += le)
 				{
 					float tr = fftBuffer[p2r] * ur - fftBuffer[p2i] * ui;
 					float ti = fftBuffer[p2r] * ui + fftBuffer[p2i] * ur;
-//					idx++;
+					// idx++;
 					fftBuffer[p2r] = fftBuffer[p1r] - tr;
 					fftBuffer[p2i] = fftBuffer[p1i] - ti;
 					fftBuffer[p1r] += tr;

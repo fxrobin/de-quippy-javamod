@@ -29,7 +29,8 @@ import de.quippy.javamod.system.Helpers;
  */
 public class Pattern
 {
-	private PatternRow [] patternRow;
+	private PatternRow[] patternRow;
+
 	/**
 	 * Constructor for Pattern
 	 */
@@ -38,11 +39,14 @@ public class Pattern
 		super();
 		patternRow = new PatternRow[rows];
 	}
+
 	public Pattern(int rows, int channels)
 	{
 		this(rows);
-		for (int i=0; i<rows; i++) patternRow[i]= new PatternRow(channels);
+		for (int i = 0; i < rows; i++)
+			patternRow[i] = new PatternRow(channels);
 	}
+
 	/**
 	 * @return
 	 * @see java.lang.Object#toString()
@@ -51,10 +55,11 @@ public class Pattern
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		for (int i=0; i<patternRow.length; i++)
+		for (int i = 0; i < patternRow.length; i++)
 			sb.append(Helpers.getAsHex(i, 2)).append(": ").append(patternRow[i].toString()).append('\n');
 		return sb.toString();
 	}
+
 	/**
 	 * @since 23.08.2008
 	 * @return
@@ -63,17 +68,19 @@ public class Pattern
 	{
 		return patternRow.length;
 	}
+
 	/**
 	 * @since 23.08.2008
 	 */
 	public void resetRowsPlayed()
 	{
-		for (int i=0; i<patternRow.length; i++)
+		for (int i = 0; i < patternRow.length; i++)
 		{
 			PatternRow row = patternRow[i];
-			if (row!=null) row.resetRowPlayed();
+			if (row != null) row.resetRowPlayed();
 		}
 	}
+
 	/**
 	 * @return Returns the patternRow.
 	 */
@@ -81,6 +88,7 @@ public class Pattern
 	{
 		return patternRow;
 	}
+
 	/**
 	 * @return Returns the patternRow.
 	 */
@@ -88,6 +96,7 @@ public class Pattern
 	{
 		return patternRow[row];
 	}
+
 	/**
 	 * @return Returns the patternElement.
 	 */
@@ -95,22 +104,28 @@ public class Pattern
 	{
 		return patternRow[row].getPatternElement(channel);
 	}
+
 	/**
-	 * @param patternRow The patternRow to set.
+	 * @param patternRow
+	 *            The patternRow to set.
 	 */
 	public void setPatternRow(PatternRow[] patternRow)
 	{
 		this.patternRow = patternRow;
 	}
+
 	/**
-	 * @param patternRow The patternRow to set.
+	 * @param patternRow
+	 *            The patternRow to set.
 	 */
 	public void setPatternRow(int row, PatternRow patternRow)
 	{
 		this.patternRow[row] = patternRow;
 	}
+
 	/**
-	 * @param patternElement The patternElement to set.
+	 * @param patternElement
+	 *            The patternElement to set.
 	 */
 	public void setPatternElement(int row, int channel, PatternElement patternElement)
 	{

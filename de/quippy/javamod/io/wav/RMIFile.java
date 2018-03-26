@@ -51,6 +51,7 @@ public class RMIFile extends RiffFile
 	{
 		return ((br[0] << 24) & 0xFF000000) | ((br[1] << 16) & 0x00FF0000) | ((br[2] << 8) & 0x0000FF00) | (br[3] & 0x000000FF);
 	}
+
 	public static Sequence open(URL url) throws UnsupportedAudioFileException
 	{
 		InputStream rmiInput = null;
@@ -58,29 +59,30 @@ public class RMIFile extends RiffFile
 		{
 			rmiInput = new FileOrPackedInputStream(url);
 			byte[] br = new byte[8];
-			
+
 			rmiInput.read(br, 0, 8);
 			int chkID = ((br[0] << 24) & 0xFF000000) | ((br[1] << 16) & 0x00FF0000) | ((br[2] << 8) & 0x0000FF00) | (br[3] & 0x000000FF);
-			//int chkSize = ((br[7] << 24) & 0xFF000000) | ((br[6] << 16) & 0x00FF0000) | ((br[5] << 8) & 0x0000FF00) | (br[4] & 0x000000FF);
+			// int chkSize = ((br[7] << 24) & 0xFF000000) | ((br[6] << 16) &
+			// 0x00FF0000) | ((br[5] << 8) & 0x0000FF00) | (br[4] & 0x000000FF);
 			if (chkID != fourCC("RIFF")) throw new UnsupportedAudioFileException("File is not a RMI RIFF file");
 
 			rmiInput.read(br, 0, 4);
 			if (fourCC(br) != fourCC("RMID")) throw new UnsupportedAudioFileException("File is not a RMI RIFF file");
-			
+
 			rmiInput.read(br, 0, 8);
 			int dataID = ((br[0] << 24) & 0xFF000000) | ((br[1] << 16) & 0x00FF0000) | ((br[2] << 8) & 0x0000FF00) | (br[3] & 0x000000FF);
 			int dataSize = ((br[7] << 24) & 0xFF000000) | ((br[6] << 16) & 0x00FF0000) | ((br[5] << 8) & 0x0000FF00) | (br[4] & 0x000000FF);
 			if (dataID != fourCC("data")) throw new UnsupportedAudioFileException("File is not a RMI RIFF file");
 
-			byte [] buffer = new byte[dataSize];
+			byte[] buffer = new byte[dataSize];
 			int fullSize = 0;
-			while (fullSize<dataSize)
+			while (fullSize < dataSize)
 			{
 				int readLength = rmiInput.read(buffer, fullSize, dataSize - fullSize);
-				if (readLength==-1) break;
+				if (readLength == -1) break;
 				fullSize += readLength;
 			}
-			
+
 			ByteArrayInputStream input = null;
 			try
 			{
@@ -94,7 +96,14 @@ public class RMIFile extends RiffFile
 			}
 			finally
 			{
-				if (input!=null) try { input.close(); } catch (Exception ex) { Log.error("IGNORED", ex); }
+				if (input != null) try
+				{
+					input.close();
+				}
+				catch (Exception ex)
+				{
+					Log.error("IGNORED", ex);
+				}
 			}
 		}
 		catch (IOException ex)
@@ -103,8 +112,15 @@ public class RMIFile extends RiffFile
 		}
 		finally
 		{
-			if (rmiInput!=null) try { rmiInput.close(); } catch (Exception ex) { Log.error("IGNORED", ex); }
+			if (rmiInput != null) try
+			{
+				rmiInput.close();
+			}
+			catch (Exception ex)
+			{
+				Log.error("IGNORED", ex);
+			}
 		}
-		return null;		
+		return null;
 	}
 }

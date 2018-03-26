@@ -41,10 +41,7 @@ import de.quippy.javamod.system.Helpers;
  */
 public class ScreamTrackerMod extends Module
 {
-	private static final String[] MODFILEEXTENSION = new String [] 
-	{
-		"s3m"
-	};
+	private static final String[] MODFILEEXTENSION = new String[] { "s3m" };
 	/**
 	 * Will be executed during class load
 	 */
@@ -58,8 +55,8 @@ public class ScreamTrackerMod extends Module
 	protected int samplesType;
 	protected boolean isStereo;
 	protected boolean usePanningValues;
-	protected int [] channelSettings;
-	protected int [] panningValue;
+	protected int[] channelSettings;
+	protected int[] panningValue;
 	/** Due to deactivated Channels, we need to remap: */
 	private int[] channelMap;
 
@@ -70,34 +67,40 @@ public class ScreamTrackerMod extends Module
 	{
 		super();
 	}
+
 	/**
 	 * Constructor for ScreamTrackerMod
+	 * 
 	 * @param fileExtension
 	 */
 	protected ScreamTrackerMod(String fileName)
 	{
 		super(fileName);
 	}
+
 	/**
 	 * @return the Fileextensions this loader is suitable for
 	 * @see de.quippy.javamod.multimedia.mod.loader.Module#getFileExtensionList()
 	 */
 	@Override
-	public String [] getFileExtensionList()
+	public String[] getFileExtensionList()
 	{
 		return MODFILEEXTENSION;
 	}
+
 	/**
 	 * @param sampleRate
 	 * @param doISP
 	 * @return
-	 * @see de.quippy.javamod.multimedia.mod.loader.Module#getModMixer(int, boolean)
+	 * @see de.quippy.javamod.multimedia.mod.loader.Module#getModMixer(int,
+	 *      boolean)
 	 */
 	@Override
 	public BasicModMixer getModMixer(int sampleRate, int doISP, int doNoLoops)
 	{
 		return new ScreamTrackerMixer(this, sampleRate, doISP, doNoLoops);
 	}
+
 	/**
 	 * @param channel
 	 * @return
@@ -108,6 +111,7 @@ public class ScreamTrackerMod extends Module
 	{
 		return panningValue[channel];
 	}
+
 	/**
 	 * @param channel
 	 * @return
@@ -118,6 +122,7 @@ public class ScreamTrackerMod extends Module
 	{
 		return 64;
 	}
+
 	/**
 	 * @return
 	 * @see de.quippy.javamod.multimedia.mod.loader.Module#getFrequencyTable()
@@ -127,6 +132,7 @@ public class ScreamTrackerMod extends Module
 	{
 		return Helpers.STM_S3M_TABLE;
 	}
+
 	/**
 	 * @return
 	 * @see de.quippy.javamod.multimedia.mod.loader.Module#doFastSlides()
@@ -134,55 +140,64 @@ public class ScreamTrackerMod extends Module
 	@Override
 	public boolean doFastSlides()
 	{
-		return (flags&64)!=0;
+		return (flags & 64) != 0;
 	}
+
 	/**
 	 * Set a Pattern by interpreting
+	 * 
 	 * @param input
 	 * @param offset
 	 * @param pattNum
 	 */
 	private void setPattern(int pattNum, ModfileInputStream inputStream) throws IOException
 	{
-		int row=0;
+		int row = 0;
 		PatternRow currentRow = getPatternContainer().getPatternRow(pattNum, row);
 
-		int count = inputStream.readIntelWord()-2; // this read byte also counts
-		while (count>=0)
+		int count = inputStream.readIntelWord() - 2; // this read byte also
+														// counts
+		while (count >= 0)
 		{
-			int packByte = inputStream.readByteAsInt(); count--;
-			if (packByte==0)
+			int packByte = inputStream.readByteAsInt();
+			count--;
+			if (packByte == 0)
 			{
 				row++;
-				if (row>=64) 
+				if (row >= 64)
 					break; // Maximum. But do we have to break?! Donnow...
 				else
 					currentRow = getPatternContainer().getPatternRow(pattNum, row);
 			}
 			else
 			{
-				int channel = packByte&31; // there is the channel
+				int channel = packByte & 31; // there is the channel
 				channel = channelMap[channel];
-				
+
 				int period = 0;
 				int noteIndex = 0;
 				int instrument = 0;
 				int volume = -1;
 				int effekt = 0;
 				int effektOp = 0;
-				
-				if ((packByte&32)!=0) // Note and Sample follow
+
+				if ((packByte & 32) != 0) // Note and Sample follow
 				{
-					int ton = inputStream.readByteAsInt(); count--;
-					if (ton==254)
+					int ton = inputStream.readByteAsInt();
+					count--;
+					if (ton == 254)
 					{
-						noteIndex = period = Helpers.NOTE_CUT; // This is our NoteCutValue!
+						noteIndex = period = Helpers.NOTE_CUT; // This is our
+																// NoteCutValue!
 					}
-					else 
+					else
 					{
 						// calculate the new note
-						noteIndex = ((ton>>4)+1)*12+(ton&0xF); // fit to it octacves
-						if (noteIndex>=Helpers.noteValues.length)
+						noteIndex = ((ton >> 4) + 1) * 12 + (ton & 0xF); // fit
+																			// to
+																			// it
+																			// octacves
+						if (noteIndex >= Helpers.noteValues.length)
 						{
 							period = 0;
 							noteIndex = 0;
@@ -193,28 +208,32 @@ public class ScreamTrackerMod extends Module
 							noteIndex++;
 						}
 					}
-					
-					instrument = inputStream.readByteAsInt(); count--;
+
+					instrument = inputStream.readByteAsInt();
+					count--;
 				}
-				
-				if ((packByte&64)!=0) // volume following
+
+				if ((packByte & 64) != 0) // volume following
 				{
-					volume = inputStream.readByteAsInt(); count--;
+					volume = inputStream.readByteAsInt();
+					count--;
 				}
-				
-				if ((packByte&128)!=0) // Effekts!
+
+				if ((packByte & 128) != 0) // Effekts!
 				{
-					effekt = inputStream.readByteAsInt(); count--;
-					effektOp = inputStream.readByteAsInt(); count--;
+					effekt = inputStream.readByteAsInt();
+					count--;
+					effektOp = inputStream.readByteAsInt();
+					count--;
 				}
-				
-				if (channel!=-1)
+
+				if (channel != -1)
 				{
 					PatternElement currentElement = currentRow.getPatternElement(channel);
 					currentElement.setNoteIndex(noteIndex);
 					currentElement.setPeriod(period);
 					currentElement.setInstrument(instrument);
-					if (volume!=-1)
+					if (volume != -1)
 					{
 						currentElement.setVolumeEffekt(1);
 						currentElement.setVolumeEffektOp(volume);
@@ -225,6 +244,7 @@ public class ScreamTrackerMod extends Module
 			}
 		}
 	}
+
 	/**
 	 * @param inputStream
 	 * @return true, if this is a protracker mod, false if this is not clear
@@ -236,8 +256,9 @@ public class ScreamTrackerMod extends Module
 		inputStream.seek(0x2C);
 		String s3mID = inputStream.readString(4);
 		inputStream.seek(0);
-		return s3mID.equals("SCRM"); 
+		return s3mID.equals("SCRM");
 	}
+
 	/**
 	 * @param fileName
 	 * @return
@@ -248,6 +269,7 @@ public class ScreamTrackerMod extends Module
 	{
 		return new ScreamTrackerMod(fileName);
 	}
+
 	/**
 	 * @param inputStream
 	 * @return
@@ -257,15 +279,15 @@ public class ScreamTrackerMod extends Module
 	public void loadModFileInternal(ModfileInputStream inputStream) throws IOException
 	{
 		setModType(Helpers.MODTYPE_S3M);
-		
+
 		inputStream.seek(0x1D);
-		int id = inputStream.readByteAsInt(); 
-		if (id!=0x10) throw new IOException("Unsupported S3M MOD (ID!=0x10)");
+		int id = inputStream.readByteAsInt();
+		if (id != 0x10) throw new IOException("Unsupported S3M MOD (ID!=0x10)");
 		inputStream.seek(0);
-		
+
 		// Songname
 		setSongName(inputStream.readString(28));
-		
+
 		// Skip arbitrary data...
 		inputStream.seek(0x20);
 
@@ -274,141 +296,144 @@ public class ScreamTrackerMod extends Module
 		setNInstruments(getNSamples());
 		setNPattern(inputStream.readIntelWord());
 		setNChannels(32);
-		
+
 		// Flags... Skip
 		flags = inputStream.readIntelWord();
-		
+
 		// Version number
 		version = inputStream.readIntelWord();
-		
+
 		// Samples Type
 		samplesType = inputStream.readIntelWord();
 
 		// ModID
 		setModID(inputStream.readString(4));
-		setTrackerName("ScreamTracker V" + ((version>>8)&0x0F) + '.' + (version&0xFF));
+		setTrackerName("ScreamTracker V" + ((version >> 8) & 0x0F) + '.' + (version & 0xFF));
 
 		// Global Volume
-		setBaseVolume(inputStream.readByteAsInt()<<1);
-		
+		setBaseVolume(inputStream.readByteAsInt() << 1);
+
 		// Tempo
 		setTempo(inputStream.readByteAsInt());
-		
+
 		// BPM
 		setBPMSpeed(inputStream.readByteAsInt());
-		
-		// MasterVolume (mv&0x80)!=0 --> Stereo else Mono, MasterVolume is SoundBlaster specific
-		isStereo = ((inputStream.readByteAsInt() & 0x80)!=0);
+
+		// MasterVolume (mv&0x80)!=0 --> Stereo else Mono, MasterVolume is
+		// SoundBlaster specific
+		isStereo = ((inputStream.readByteAsInt() & 0x80) != 0);
 		// UltraClick removal --> ignored
-		/*int uc = */inputStream.readByteAsInt();
+		/* int uc = */inputStream.readByteAsInt();
 		// DefaultPanning
-		usePanningValues = inputStream.readByteAsInt()==0xFC;
-		
-		// skip again arbitrary data (8Byte unused, 2Byte is pointer to special data, if "special data flag" at offset 0x26 is set
+		usePanningValues = inputStream.readByteAsInt() == 0xFC;
+
+		// skip again arbitrary data (8Byte unused, 2Byte is pointer to special
+		// data, if "special data flag" at offset 0x26 is set
 		inputStream.skip(10);
-		
+
 		// PanningValues and active or unactive Channels
 		channelSettings = new int[32];
 		channelMap = new int[32];
 		int anzChannel = 0;
-		for (int i=0; i<32; i++)
+		for (int i = 0; i < 32; i++)
 		{
-			int readByte = inputStream.readByteAsInt(); 
-			if (readByte!=255)
+			int readByte = inputStream.readByteAsInt();
+			if (readByte != 255)
 			{
-				channelMap[i]=anzChannel;
+				channelMap[i] = anzChannel;
 				channelSettings[anzChannel++] = readByte;
 			}
 			else
-				channelMap[i]=-1;
+				channelMap[i] = -1;
 		}
 		setNChannels(anzChannel);
-		
+
 		// Song Arrangement
 		allocArrangement(getSongLength());
-		for (int i=0; i<getSongLength(); i++)  getArrangement()[i]=inputStream.readByteAsInt();
-		
+		for (int i = 0; i < getSongLength(); i++)
+			getArrangement()[i] = inputStream.readByteAsInt();
+
 		// read the samples
 		InstrumentsContainer instrumentContainer = new InstrumentsContainer(this, 0, getNSamples());
 		this.setInstrumentContainer(instrumentContainer);
-		for (int i=0; i<getNSamples(); i++)
+		for (int i = 0; i < getNSamples(); i++)
 		{
-			inputStream.seek(96L+getSongLength()+(i<<1));
+			inputStream.seek(96L + getSongLength() + (i << 1));
 			long instrumentOffset = inputStream.readIntelWord();
-			inputStream.seek(instrumentOffset<<4);
-			
+			inputStream.seek(instrumentOffset << 4);
+
 			Sample current = new Sample();
-			
+
 			current.setType(inputStream.readByteAsInt());
 			// Samplename
 			current.setDosFileName(inputStream.readString(13));
-			
+
 			long sampleOffset = inputStream.readIntelWord();
-			
+
 			// Length
 			current.setLength(inputStream.readIntelDWord());
-			
+
 			// Repeat start and stop
 			int repeatStart = inputStream.readIntelDWord();
-			int repeatStop  = inputStream.readIntelDWord();
+			int repeatStop = inputStream.readIntelDWord();
 
 			current.setRepeatStart(repeatStart);
 			current.setRepeatStop(repeatStop);
-			current.setRepeatLength(repeatStop-repeatStart);
+			current.setRepeatLength(repeatStop - repeatStart);
 
-			// volume 
+			// volume
 			current.setVolume(inputStream.readByteAsInt());
-			
+
 			// Reserved (Sample Beginning Offset?!)
 			inputStream.skip(2);
 
 			// Flags: 1:Loop 2:Stereo 4:16Bit-Sample...
 			current.setFlags(inputStream.readByteAsInt());
-			current.setLoopType(((current.flags&0x01)==0x01) ? Helpers.LOOP_ON : 0);
-			
+			current.setLoopType(((current.flags & 0x01) == 0x01) ? Helpers.LOOP_ON : 0);
+
 			// C4SPD
 			current.setFineTune(0);
 			current.setTranspose(0);
 			current.setBaseFrequency(inputStream.readIntelDWord());
-			
+
 			// Again reserved data...
 			inputStream.skip(12);
-			
+
 			// SampleName
 			current.setName(inputStream.readString(28));
-			
+
 			// Key
 			inputStream.skip(4);
-			
+
 			current.setPanning(-1);
-			
+
 			// SampleData
-			int flags = (samplesType==2)?Helpers.SM_PCMU:Helpers.SM_PCMS;
-			if ((current.flags&0x04)!=0) flags|=Helpers.SM_16BIT;
-			inputStream.seek(sampleOffset<<4);
+			int flags = (samplesType == 2) ? Helpers.SM_PCMU : Helpers.SM_PCMS;
+			if ((current.flags & 0x04) != 0) flags |= Helpers.SM_16BIT;
+			inputStream.seek(sampleOffset << 4);
 			readSampleData(current, flags, inputStream);
 
 			instrumentContainer.setSample(i, current);
 		}
-		
+
 		// Pattern data
 		PatternContainer patternContainer = new PatternContainer(getNPattern(), 64, getNChannels());
 		setPatternContainer(patternContainer);
-		for (int pattNum=0; pattNum<getNPattern(); pattNum++)
+		for (int pattNum = 0; pattNum < getNPattern(); pattNum++)
 		{
 			// First, clear them:
-			for (int row=0; row<64; row++)
+			for (int row = 0; row < 64; row++)
 			{
-				for (int channel=0; channel<getNChannels(); channel++)
+				for (int channel = 0; channel < getNChannels(); channel++)
 				{
 					PatternElement currentElement = new PatternElement(pattNum, row, channel);
 					patternContainer.setPatternElement(currentElement);
 				}
 			}
 
-			inputStream.seek(96L+getSongLength()+(getNSamples()<<1)+(pattNum<<1));
+			inputStream.seek(96L + getSongLength() + (getNSamples() << 1) + (pattNum << 1));
 			long patternPosition = inputStream.readIntelWord();
-			inputStream.seek(patternPosition<<4);
+			inputStream.seek(patternPosition << 4);
 			setPattern(pattNum, inputStream);
 		}
 
@@ -416,54 +441,53 @@ public class ScreamTrackerMod extends Module
 		panningValue = new int[getNChannels()];
 		if (this.usePanningValues)
 		{
-			inputStream.seek(96L+getSongLength()+(getNSamples()<<1)+(getNPattern()<<1));
-			for (int i=0; i<getNChannels(); i++)
+			inputStream.seek(96L + getSongLength() + (getNSamples() << 1) + (getNPattern() << 1));
+			for (int i = 0; i < getNChannels(); i++)
 			{
-				int readByte = inputStream.readByteAsInt() & 0x0F; 
+				int readByte = inputStream.readByteAsInt() & 0x0F;
 				int ch = channelMap[i];
-				if (ch!=-1)
+				if (ch != -1)
 				{
-					int val = readByte<<4;
-					if (this.channelSettings[ch]<=7 || readByte!=0)
+					int val = readByte << 4;
+					if (this.channelSettings[ch] <= 7 || readByte != 0)
 					{
-						panningValue[ch]=val;
+						panningValue[ch] = val;
 					}
 					else
 					{
-						panningValue[ch]=256-val;
+						panningValue[ch] = 256 - val;
 					}
 				}
 			}
 		}
-		else
-		if (!isStereo)
+		else if (!isStereo)
 		{
-			for (int i=0; i<getNChannels(); i++)
+			for (int i = 0; i < getNChannels(); i++)
 			{
-				panningValue[i]=128;
+				panningValue[i] = 128;
 			}
 		}
 		else
 		{
-			for (int i=0; i<getNChannels(); i++)
+			for (int i = 0; i < getNChannels(); i++)
 			{
-				if (this.channelSettings[i]<=7)
+				if (this.channelSettings[i] <= 7)
 				{
-					panningValue[i]=256;
+					panningValue[i] = 256;
 				}
 				else
 				{
-					panningValue[i]=0;
+					panningValue[i] = 0;
 				}
 			}
 		}
 
-		// Correct the songlength for playing, skip markerpattern... (do not want to skip them during playing!)
+		// Correct the songlength for playing, skip markerpattern... (do not
+		// want to skip them during playing!)
 		int realLen = 0;
-		for (int i=0; i<getSongLength(); i++)
+		for (int i = 0; i < getSongLength(); i++)
 		{
-			if (getArrangement()[i]<254 && getArrangement()[i]<getNPattern())
-				getArrangement()[realLen++]=getArrangement()[i];
+			if (getArrangement()[i] < 254 && getArrangement()[i] < getNPattern()) getArrangement()[realLen++] = getArrangement()[i];
 		}
 		setSongLength(realLen);
 		cleanUpArrangement();

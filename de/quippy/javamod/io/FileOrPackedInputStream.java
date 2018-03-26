@@ -35,8 +35,9 @@ import java.util.zip.ZipInputStream;
 import de.quippy.javamod.system.Helpers;
 
 /**
- * This FileInputStream will also handle files that are in zip files
- * Use a path like "C:/someDir/zipFile.zip/path/to/file
+ * This FileInputStream will also handle files that are in zip files Use a path
+ * like "C:/someDir/zipFile.zip/path/to/file
+ * 
  * @author Daniel Becker
  * @since 04.01.2011
  */
@@ -44,14 +45,14 @@ public class FileOrPackedInputStream extends InputStream
 {
 	protected InputStream stream;
 	private ZipEntry entry;
-	
+
 	/**
 	 * Constructor for FileOrPackedInputStream
 	 */
 	public FileOrPackedInputStream(File file) throws IOException, FileNotFoundException
 	{
 		super();
-		if (!file.exists()) 
+		if (!file.exists())
 		{
 			try
 			{
@@ -65,6 +66,7 @@ public class FileOrPackedInputStream extends InputStream
 		else
 			stream = new FileInputStream(file);
 	}
+
 	/**
 	 * Constructor for FileOrPackedInputStream
 	 */
@@ -72,6 +74,7 @@ public class FileOrPackedInputStream extends InputStream
 	{
 		this(new File(fileName));
 	}
+
 	/**
 	 * Constructor for FileOrPackedInputStream
 	 */
@@ -82,24 +85,27 @@ public class FileOrPackedInputStream extends InputStream
 		{
 			stream = fromUrl.openStream();
 		}
-		catch (AccessControlException ex) // This happens with applets if controlled from outside
+		catch (AccessControlException ex) // This happens with applets if
+											// controlled from outside
 		{
-			throw new AccessControlException("[FileOrPackedInputStream] Access denied: "+fromUrl.toString());
+			throw new AccessControlException("[FileOrPackedInputStream] Access denied: " + fromUrl.toString());
 		}
 		catch (Exception ex)
 		{
-			//Log.error("[FileOrPackedInputStream] Checking if "+fromUrl.toString()+" is a zipped file location", ex);
+			// Log.error("[FileOrPackedInputStream] Checking if
+			// "+fromUrl.toString()+" is a zipped file location", ex);
 			stream = tryForZippedFile(fromUrl);
 		}
 	}
+
 	private InputStream tryForZippedFile(URL fromUrl) throws IOException
 	{
 		String path = fromUrl.toString();
 		String fileNamePortion = "";
-		while (path!=null && path.length()!=0)
+		while (path != null && path.length() != 0)
 		{
 			int slashIndex = path.lastIndexOf('/');
-			if (slashIndex<0) break;
+			if (slashIndex < 0) break;
 			fileNamePortion = Helpers.createStringFromURLString(path.substring(slashIndex)) + fileNamePortion;
 			path = path.substring(0, slashIndex);
 			URL newUrl = new URL(path);
@@ -114,7 +120,7 @@ public class FileOrPackedInputStream extends InputStream
 			}
 			String zipEntryName = fileNamePortion.substring(1);
 			ZipEntry entry;
-			while ((entry = input.getNextEntry())!=null)
+			while ((entry = input.getNextEntry()) != null)
 			{
 				if (entry.isDirectory()) continue;
 				if (entry.getName().equals(zipEntryName))
@@ -126,14 +132,17 @@ public class FileOrPackedInputStream extends InputStream
 		}
 		throw new FileNotFoundException(fromUrl.toString());
 	}
+
 	/**
 	 * returns null if this stream is not a zip stream
+	 * 
 	 * @return the entry
 	 */
 	public ZipEntry getEntry()
 	{
 		return entry;
 	}
+
 	/**
 	 * @return
 	 * @throws IOException
@@ -142,11 +151,12 @@ public class FileOrPackedInputStream extends InputStream
 	@Override
 	public int available() throws IOException
 	{
-		if (entry==null) 
+		if (entry == null)
 			return stream.available();
 		else
-			return (int)entry.getSize();
+			return (int) entry.getSize();
 	}
+
 	/**
 	 * @throws IOException
 	 * @see java.io.InputStream#close()
@@ -157,6 +167,7 @@ public class FileOrPackedInputStream extends InputStream
 		stream.close();
 		super.close();
 	}
+
 	/**
 	 * @param readlimit
 	 * @see java.io.InputStream#mark(int)
@@ -166,6 +177,7 @@ public class FileOrPackedInputStream extends InputStream
 	{
 		stream.mark(readlimit);
 	}
+
 	/**
 	 * @return
 	 * @see java.io.InputStream#markSupported()
@@ -175,6 +187,7 @@ public class FileOrPackedInputStream extends InputStream
 	{
 		return stream.markSupported();
 	}
+
 	/**
 	 * @throws IOException
 	 * @see java.io.InputStream#reset()
@@ -184,6 +197,7 @@ public class FileOrPackedInputStream extends InputStream
 	{
 		stream.reset();
 	}
+
 	/**
 	 * @param n
 	 * @return
@@ -195,6 +209,7 @@ public class FileOrPackedInputStream extends InputStream
 	{
 		return stream.skip(n);
 	}
+
 	/**
 	 * @return
 	 * @throws IOException
@@ -205,6 +220,7 @@ public class FileOrPackedInputStream extends InputStream
 	{
 		return stream.read();
 	}
+
 	/**
 	 * @param b
 	 * @return
@@ -215,8 +231,9 @@ public class FileOrPackedInputStream extends InputStream
 	public int read(byte[] b) throws IOException
 	{
 		return stream.read(b);
-//		return read(b, 0, b.length);
+		// return read(b, 0, b.length);
 	}
+
 	/**
 	 * @param b
 	 * @param off
@@ -229,19 +246,19 @@ public class FileOrPackedInputStream extends InputStream
 	public int read(byte[] b, int off, int len) throws IOException
 	{
 		return stream.read(b, off, len);
-//		int fullSize = 0;
-//		while (fullSize < len)
-//		{
-//			int readLength = stream.read(b, off + fullSize, len - fullSize);
-//			if (readLength==-1)
-//			{
-//				if (fullSize>0)
-//					return fullSize;
-//				else
-//					return -1;
-//			}
-//			fullSize += readLength;
-//		}
-//		return fullSize;
+		// int fullSize = 0;
+		// while (fullSize < len)
+		// {
+		// int readLength = stream.read(b, off + fullSize, len - fullSize);
+		// if (readLength==-1)
+		// {
+		// if (fullSize>0)
+		// return fullSize;
+		// else
+		// return -1;
+		// }
+		// fullSize += readLength;
+		// }
+		// return fullSize;
 	}
 }

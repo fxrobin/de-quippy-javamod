@@ -38,13 +38,14 @@ import java.net.URL;
 import de.quippy.javamod.system.Log;
 
 /**
- * This class mappes the RandomAccessFile to an InputStream type of class.
- * You can also instantiate this class with an URL. If this URL is not of
- * protocol type "file://" the ressource will get downloaded and written to
- * a tmp file. The tempfile will be deleted with calling of "close".
- * Furthermore this input stream will also handle zip compressed content
- * If nothing else works the fallback strategy is to use an internal buffer.
- * This will be also used by PowerPacked Modes (see ModfileInputSteam)
+ * This class mappes the RandomAccessFile to an InputStream type of class. You
+ * can also instantiate this class with an URL. If this URL is not of protocol
+ * type "file://" the ressource will get downloaded and written to a tmp file.
+ * The tempfile will be deleted with calling of "close". Furthermore this input
+ * stream will also handle zip compressed content If nothing else works the
+ * fallback strategy is to use an internal buffer. This will be also used by
+ * PowerPacked Modes (see ModfileInputSteam)
+ * 
  * @author Daniel Becker
  * @since 31.12.2007
  */
@@ -54,13 +55,14 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	protected File localFile = null;
 	protected File tmpFile = null;
 	protected int mark = 0;
-	
+
 	protected byte[] buffer = null;
 	protected int readPointer = 0;
 	protected int bufferLength = 0;
-	
+
 	/**
 	 * Constructor for RandomAccessInputStreamImpl
+	 * 
 	 * @param file
 	 * @throws FileNotFoundException
 	 */
@@ -73,8 +75,10 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		}
 		raFile = new RandomAccessFile(localFile = file, "r");
 	}
+
 	/**
 	 * Constructor for RandomAccessInputStreamImpl
+	 * 
 	 * @param fileName
 	 * @throws FileNotFoundException
 	 */
@@ -82,12 +86,12 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	{
 		this(new File(fileName));
 	}
-	
+
 	public RandomAccessInputStreamImpl(InputStream in) throws IOException
 	{
 		int size = in.available();
-		if (size<1024) size = 1024;
-		ByteArrayOutputStream out = new ByteArrayOutputStream(size);		
+		if (size < 1024) size = 1024;
+		ByteArrayOutputStream out = new ByteArrayOutputStream(size);
 		copyFullStream(in, out);
 		in.close();
 		out.close();
@@ -97,7 +101,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		raFile = null;
 		localFile = null;
 	}
-	
+
 	public RandomAccessInputStreamImpl(URL fromUrl) throws IOException, FileNotFoundException
 	{
 		super();
@@ -124,20 +128,27 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 			try
 			{
 				tmpFile = copyFullStream(inputStream);
-				try { inputStream.close(); } catch (IOException ex) { Log.error("IGNORED", ex); }
+				try
+				{
+					inputStream.close();
+				}
+				catch (IOException ex)
+				{
+					Log.error("IGNORED", ex);
+				}
 				raFile = new RandomAccessFile(localFile = tmpFile, "r");
 			}
 			catch (Throwable ex)
 			{
 				int size = inputStream.available();
-				if (size<1024) size = 1024;
+				if (size < 1024) size = 1024;
 				ByteArrayOutputStream out = new ByteArrayOutputStream(size);
-				
+
 				copyFullStream(inputStream, out);
-				
+
 				inputStream.close();
 				out.close();
-				
+
 				buffer = out.toByteArray();
 				bufferLength = buffer.length;
 				readPointer = 0;
@@ -146,6 +157,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 			}
 		}
 	}
+
 	/**
 	 * @since 04.01.2011
 	 * @param file
@@ -157,6 +169,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		InputStream input = new FileOrPackedInputStream(fromUrl);
 		return copyFullStream(input);
 	}
+
 	/**
 	 * @since 02.01.2011
 	 * @param input
@@ -171,9 +184,10 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		FileOutputStream out = new FileOutputStream(tmpFile);
 		copyFullStream(input, out);
 		out.close();
-		
+
 		return tmpFile;
 	}
+
 	/**
 	 * @since 02.01.2008
 	 * @param inputStream
@@ -184,14 +198,16 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	{
 		byte[] input = new byte[8192];
 		int len;
-		while ((len = inputStream.read(input, 0, 8192))!=-1)
+		while ((len = inputStream.read(input, 0, 8192)) != -1)
 		{
 			out.write(input, 0, len);
 		}
 	}
+
 	/**
-	 * Will return the local file this RandomAccessFile works on
-	 * or null using local buffer and no file
+	 * Will return the local file this RandomAccessFile works on or null using
+	 * local buffer and no file
+	 * 
 	 * @since 09.01.2011
 	 * @return
 	 */
@@ -199,6 +215,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	{
 		return localFile;
 	}
+
 	/**
 	 * @return
 	 * @throws IOException
@@ -207,11 +224,12 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	@Override
 	public int available() throws IOException
 	{
-		if (raFile!=null)
-			return (int)(raFile.length() - raFile.getFilePointer());
+		if (raFile != null)
+			return (int) (raFile.length() - raFile.getFilePointer());
 		else
-			return bufferLength-readPointer;
+			return bufferLength - readPointer;
 	}
+
 	/**
 	 * @throws IOException
 	 * @see java.io.InputStream#close()
@@ -219,9 +237,9 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	@Override
 	public void close() throws IOException
 	{
-		if (raFile!=null) raFile.close();
+		if (raFile != null) raFile.close();
 		super.close();
-		if (tmpFile!=null)
+		if (tmpFile != null)
 		{
 			boolean ok = tmpFile.delete();
 			if (!ok) Log.error("Could not delete temporary file: " + tmpFile.getCanonicalPath());
@@ -231,6 +249,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		bufferLength = 0;
 		readPointer = 0;
 	}
+
 	/**
 	 * @param readlimit
 	 * @see java.io.InputStream#mark(int)
@@ -240,8 +259,8 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	{
 		try
 		{
-			if (raFile!=null) 
-				mark = (int)raFile.getFilePointer();
+			if (raFile != null)
+				mark = (int) raFile.getFilePointer();
 			else
 				mark = readPointer;
 		}
@@ -249,6 +268,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		{
 		}
 	}
+
 	/**
 	 * @return
 	 * @see java.io.InputStream#markSupported()
@@ -258,6 +278,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	{
 		return true;
 	}
+
 	/**
 	 * @return
 	 * @throws IOException
@@ -266,11 +287,12 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	@Override
 	public int read() throws IOException
 	{
-		if (raFile!=null)
+		if (raFile != null)
 			return raFile.read();
 		else
-			return (readPointer<bufferLength)? (int)(buffer[readPointer++] & 0xFF) : -1;
+			return (readPointer < bufferLength) ? (int) (buffer[readPointer++] & 0xFF) : -1;
 	}
+
 	/**
 	 * @param b
 	 * @param off
@@ -282,25 +304,21 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	@Override
 	public int read(byte[] b, int off, int len) throws IOException
 	{
-		if (raFile!=null)
+		if (raFile != null)
 			return raFile.read(b, off, len);
 		else
 		{
-			if (b == null) 
-				throw new NullPointerException();
-			if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length) || ((off + len) < 0))
-				throw new IndexOutOfBoundsException();
-			if (readPointer >= bufferLength)
-				return -1;
-			if (readPointer + len > bufferLength)
-				len = bufferLength - readPointer;
-			if (len <= 0)
-				return 0;
+			if (b == null) throw new NullPointerException();
+			if ((off < 0) || (off > b.length) || (len < 0) || ((off + len) > b.length) || ((off + len) < 0)) throw new IndexOutOfBoundsException();
+			if (readPointer >= bufferLength) return -1;
+			if (readPointer + len > bufferLength) len = bufferLength - readPointer;
+			if (len <= 0) return 0;
 			System.arraycopy(buffer, readPointer, b, off, len);
 			readPointer += len;
 			return len;
 		}
 	}
+
 	/**
 	 * @param b
 	 * @return
@@ -312,6 +330,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	{
 		return read(b, 0, b.length);
 	}
+
 	/**
 	 * @throws IOException
 	 * @see java.io.InputStream#reset()
@@ -319,11 +338,12 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	@Override
 	public synchronized void reset() throws IOException
 	{
-		if (raFile!=null)
+		if (raFile != null)
 			raFile.seek(mark);
 		else
 			readPointer = mark;
 	}
+
 	/**
 	 * @param n
 	 * @return
@@ -333,54 +353,60 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	@Override
 	public long skip(long n) throws IOException
 	{
-		if (raFile!=null)
-			return (long)(raFile.skipBytes((int)n));
+		if (raFile != null)
+			return (long) (raFile.skipBytes((int) n));
 		else
 		{
-			if (readPointer + n > bufferLength)
-			    n = bufferLength - readPointer;
+			if (readPointer + n > bufferLength) n = bufferLength - readPointer;
 			if (n < 0) return 0;
 			readPointer += n;
 			return n;
 		}
 	}
+
 	/********************* Mapping to RandomAccessFile ************************/
 	public int skipBytes(int n) throws IOException
 	{
-		return (int)skip(n);
+		return (int) skip(n);
 	}
+
 	public long getFilePointer() throws IOException
 	{
-		if (raFile!=null)
+		if (raFile != null)
 			return raFile.getFilePointer();
 		else
 			return readPointer;
 	}
+
 	public void seek(long pos) throws IOException
 	{
-		if (raFile!=null)
+		if (raFile != null)
 			raFile.seek(pos);
 		else
-			readPointer = (int)pos;
+			readPointer = (int) pos;
 	}
+
 	public byte readByte() throws IOException
 	{
-		if (raFile!=null)
+		if (raFile != null)
 			return raFile.readByte();
 		else
-			return (byte)(read());
+			return (byte) (read());
 	}
+
 	public long getLength() throws IOException
 	{
-		if (raFile!=null)
+		if (raFile != null)
 			return raFile.length();
 		else
 			return bufferLength;
 	}
+
 	public long length() throws IOException
 	{
 		return getLength();
 	}
+
 	public int readFully(byte[] b) throws IOException
 	{
 		if (raFile != null)
@@ -391,6 +417,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		else
 			return read(b);
 	}
+
 	public int readFully(byte[] b, int offs, int len) throws IOException
 	{
 		if (raFile != null)
@@ -401,6 +428,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		else
 			return read(b, offs, len);
 	}
+
 	public boolean readBoolean() throws IOException
 	{
 		if (raFile != null)
@@ -412,31 +440,33 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 			return (ch != 0);
 		}
 	}
+
 	public char readChar() throws IOException
 	{
-		if (raFile != null) 
+		if (raFile != null)
 			return raFile.readChar();
 		else
 		{
 			int ch1 = this.read();
 			int ch2 = this.read();
 			if ((ch1 | ch2) < 0) throw new EOFException();
-			return (char)((ch1 << 8) | (ch2));
+			return (char) ((ch1 << 8) | (ch2));
 		}
 	}
+
 	public short readShort() throws IOException
 	{
-		if (raFile != null) 
+		if (raFile != null)
 			return raFile.readShort();
 		else
 		{
 			int ch1 = this.read();
 			int ch2 = this.read();
-			if ((ch1 | ch2) < 0)
-			    throw new EOFException();
-			return (short)((ch1 << 8) | (ch2));
+			if ((ch1 | ch2) < 0) throw new EOFException();
+			return (short) ((ch1 << 8) | (ch2));
 		}
 	}
+
 	public double readDouble() throws IOException
 	{
 		if (raFile != null)
@@ -444,16 +474,18 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		else
 			return Double.longBitsToDouble(readLong());
 	}
+
 	public float readFloat() throws IOException
 	{
-		if (raFile != null) 
+		if (raFile != null)
 			return raFile.readFloat();
 		else
 			return Float.intBitsToFloat(readInt());
 	}
+
 	public int readInt() throws IOException
 	{
-		if (raFile != null) 
+		if (raFile != null)
 			return raFile.readInt();
 		else
 		{
@@ -465,9 +497,10 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 			return ((ch1 << 24) | (ch2 << 16) | (ch3 << 8) | (ch4));
 		}
 	}
+
 	public String readLine() throws IOException
 	{
-		if (raFile != null) 
+		if (raFile != null)
 			return raFile.readLine();
 		else
 		{
@@ -497,23 +530,22 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 				}
 			}
 
-			if ((c == -1) && (input.length() == 0))
-			{
-				return null;
-			}
+			if ((c == -1) && (input.length() == 0)) { return null; }
 			return input.toString();
 		}
 	}
+
 	public long readLong() throws IOException
 	{
-		if (raFile != null) 
+		if (raFile != null)
 			return raFile.readLong();
 		else
-			return ((long)(readInt()) << 32) + (readInt() & 0xFFFFFFFFL);
+			return ((long) (readInt()) << 32) + (readInt() & 0xFFFFFFFFL);
 	}
+
 	public int readUnsignedByte() throws IOException
 	{
-		if (raFile != null) 
+		if (raFile != null)
 			return raFile.readUnsignedByte();
 		else
 		{
@@ -522,9 +554,10 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 			return ch;
 		}
 	}
+
 	public int readUnsignedShort() throws IOException
 	{
-		if (raFile != null) 
+		if (raFile != null)
 			return raFile.readUnsignedShort();
 		else
 		{
@@ -534,9 +567,10 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 			return (ch1 << 8) | (ch2);
 		}
 	}
+
 	public String readUTF() throws IOException
 	{
-		if (raFile != null) 
+		if (raFile != null)
 			return raFile.readUTF();
 		else
 		{

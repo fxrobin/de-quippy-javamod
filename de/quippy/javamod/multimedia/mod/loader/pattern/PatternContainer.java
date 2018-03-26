@@ -27,7 +27,8 @@ package de.quippy.javamod.multimedia.mod.loader.pattern;
  */
 public class PatternContainer
 {
-	private Pattern [] pattern;
+	private Pattern[] pattern;
+
 	/**
 	 * Constructor for PatternContainer
 	 */
@@ -36,16 +37,21 @@ public class PatternContainer
 		super();
 		pattern = new Pattern[anzPattern];
 	}
+
 	public PatternContainer(int anzPattern, int row)
 	{
 		this(anzPattern);
-		for (int i=0; i<anzPattern; i++) pattern[i] = new Pattern(row);
+		for (int i = 0; i < anzPattern; i++)
+			pattern[i] = new Pattern(row);
 	}
+
 	public PatternContainer(int anzPattern, int row, int channels)
 	{
 		this(anzPattern);
-		for (int i=0; i<anzPattern; i++) pattern[i] = new Pattern(row, channels);
+		for (int i = 0; i < anzPattern; i++)
+			pattern[i] = new Pattern(row, channels);
 	}
+
 	/**
 	 * @return
 	 * @see java.lang.Object#toString()
@@ -54,18 +60,20 @@ public class PatternContainer
 	public String toString()
 	{
 		StringBuilder sb = new StringBuilder();
-		for (int i=0; i<pattern.length; i++)
+		for (int i = 0; i < pattern.length; i++)
 			sb.append(i).append(". Pattern:\n").append(pattern[i].toString()).append('\n');
 		return sb.toString();
 	}
+
 	/**
 	 * @since 23.08.2008
 	 */
 	public void resetRowsPlayed()
 	{
-		for (int i=0; i<pattern.length; i++)
+		for (int i = 0; i < pattern.length; i++)
 			pattern[i].resetRowsPlayed();
 	}
+
 	/**
 	 * @return Returns the pattern.
 	 */
@@ -73,6 +81,7 @@ public class PatternContainer
 	{
 		return pattern;
 	}
+
 	/**
 	 * @return Returns the pattern.
 	 */
@@ -80,6 +89,7 @@ public class PatternContainer
 	{
 		return pattern[patternIndex];
 	}
+
 	/**
 	 * @return Returns the pattern.
 	 */
@@ -87,6 +97,7 @@ public class PatternContainer
 	{
 		return pattern[patternIndex].getPatternRow(row);
 	}
+
 	/**
 	 * @return Returns the pattern.
 	 */
@@ -94,36 +105,46 @@ public class PatternContainer
 	{
 		return pattern[patternIndex].getPatternElement(row, channel);
 	}
+
 	/**
-	 * @param pattern The pattern to set.
+	 * @param pattern
+	 *            The pattern to set.
 	 */
 	public void setPattern(Pattern[] pattern)
 	{
 		this.pattern = pattern;
 	}
+
 	/**
-	 * @param pattern The pattern to set.
+	 * @param pattern
+	 *            The pattern to set.
 	 */
 	public void setPattern(int patternIndex, Pattern pattern)
 	{
 		this.pattern[patternIndex] = pattern;
 	}
+
 	/**
-	 * @param pattern The pattern to set.
+	 * @param pattern
+	 *            The pattern to set.
 	 */
 	public void setPatternRow(int patternIndex, int row, PatternRow patternRow)
 	{
 		this.pattern[patternIndex].setPatternRow(row, patternRow);
 	}
+
 	/**
-	 * @param pattern The pattern to set.
+	 * @param pattern
+	 *            The pattern to set.
 	 */
 	public void setPatternElement(int patternIndex, int row, int channel, PatternElement patternElement)
 	{
 		this.pattern[patternIndex].setPatternElement(row, channel, patternElement);
 	}
+
 	/**
-	 * @param pattern The pattern to set.
+	 * @param pattern
+	 *            The pattern to set.
 	 */
 	public void setPatternElement(PatternElement patternElement)
 	{

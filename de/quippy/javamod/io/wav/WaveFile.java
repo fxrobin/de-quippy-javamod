@@ -61,6 +61,7 @@ public class WaveFile extends RiffFile
 			nBlockAlign = (short) ((nChannels * nBitsPerSample) / 8);
 		}
 	}
+
 	private static class WaveFormat_Chunk
 	{
 		public RiffChunkHeader header;
@@ -78,8 +79,9 @@ public class WaveFile extends RiffFile
 	private WaveFormat_Chunk wave_format;
 	private RiffChunkHeader pcm_data;
 	private long pcm_data_offset;
+
 	/**
-	 * Constructs a new WaveFile instance. 
+	 * Constructs a new WaveFile instance.
 	 */
 	public WaveFile()
 	{
@@ -92,8 +94,9 @@ public class WaveFile extends RiffFile
 
 	public int openForWrite(File file, AudioFormat format)
 	{
-		return openForWrite(file.getAbsolutePath(), (int)format.getSampleRate(), (short)format.getSampleSizeInBits(), (short)format.getChannels());
+		return openForWrite(file.getAbsolutePath(), (int) format.getSampleRate(), (short) format.getSampleSizeInBits(), (short) format.getChannels());
 	}
+
 	/**
 	 * Open for write using another wave file's parameters...
 	 */
@@ -101,16 +104,14 @@ public class WaveFile extends RiffFile
 	{
 		return openForWrite(Filename, OtherWave.getSamplingRate(), OtherWave.getBitsPerSample(), OtherWave.getNumChannels());
 	}
+
 	/**
 	 *
 	 */
 	public int openForWrite(String Filename, int SamplingRate, short BitsPerSample, short NumChannels)
 	{
 		// Verify parameters...
-		if (Filename == null)
-		{
-			return DDC_INVALID_CALL;
-		}
+		if (Filename == null) { return DDC_INVALID_CALL; }
 
 		wave_format.data.config(SamplingRate, BitsPerSample, NumChannels);
 
@@ -118,10 +119,7 @@ public class WaveFile extends RiffFile
 
 		if (retcode == DDC_SUCCESS)
 		{
-			byte[] theWave =
-			{
-					(byte) 'W', (byte) 'A', (byte) 'V', (byte) 'E'
-			};
+			byte[] theWave = { (byte) 'W', (byte) 'A', (byte) 'V', (byte) 'E' };
 			retcode = write(theWave, 4);
 
 			if (retcode == DDC_SUCCESS)
@@ -169,20 +167,22 @@ public class WaveFile extends RiffFile
 		pcm_data.ckSize += numBytes;
 		return write(data, numBytes);
 	}
+
 	/**
 	 * Write 16-bit audio
 	 */
 	public int writeSamples(short[] data, int numSamples)
 	{
-		int numBytes = numSamples<<1;
+		int numBytes = numSamples << 1;
 		byte[] theData = new byte[numBytes];
-		for (int y = 0, yc=0; y<numBytes; y+=2)
+		for (int y = 0, yc = 0; y < numBytes; y += 2)
 		{
 			theData[y] = (byte) (data[yc] & 0x00FF);
 			theData[y + 1] = (byte) ((data[yc++] >>> 8) & 0x00FF);
 		}
 		return write(theData, numBytes);
 	}
+
 	/**
 	 *
 	 */
@@ -194,14 +194,17 @@ public class WaveFile extends RiffFile
 		rc = super.close();
 		return rc;
 	}
+
 	public int getSamplingRate()
 	{
 		return wave_format.data.nSamplesPerSec;
 	}
+
 	public short getBitsPerSample()
 	{
 		return wave_format.data.nBitsPerSample;
 	}
+
 	public short getNumChannels()
 	{
 		return wave_format.data.nChannels;
