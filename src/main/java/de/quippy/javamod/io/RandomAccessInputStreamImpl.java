@@ -164,6 +164,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	 * @return
 	 * @throws IOException
 	 */
+	@SuppressWarnings("resource")
 	private File unpackFromZIPFile(URL fromUrl) throws IOException, FileNotFoundException
 	{
 		InputStream input = new FileOrPackedInputStream(fromUrl);
@@ -211,6 +212,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	 * @since 09.01.2011
 	 * @return
 	 */
+	@Override
 	public File getFile()
 	{
 		return localFile;
@@ -354,7 +356,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	public long skip(long n) throws IOException
 	{
 		if (raFile != null)
-			return (long) (raFile.skipBytes((int) n));
+			return (raFile.skipBytes((int) n));
 		else
 		{
 			if (readPointer + n > bufferLength) n = bufferLength - readPointer;
@@ -365,11 +367,13 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 	}
 
 	/********************* Mapping to RandomAccessFile ************************/
+	@Override
 	public int skipBytes(int n) throws IOException
 	{
 		return (int) skip(n);
 	}
 
+	@Override
 	public long getFilePointer() throws IOException
 	{
 		if (raFile != null)
@@ -378,6 +382,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 			return readPointer;
 	}
 
+	@Override
 	public void seek(long pos) throws IOException
 	{
 		if (raFile != null)
@@ -386,6 +391,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 			readPointer = (int) pos;
 	}
 
+	@Override
 	public byte readByte() throws IOException
 	{
 		if (raFile != null)
@@ -394,6 +400,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 			return (byte) (read());
 	}
 
+	@Override
 	public long getLength() throws IOException
 	{
 		if (raFile != null)
@@ -402,11 +409,13 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 			return bufferLength;
 	}
 
+	@Override
 	public long length() throws IOException
 	{
 		return getLength();
 	}
 
+	@Override
 	public int readFully(byte[] b) throws IOException
 	{
 		if (raFile != null)
@@ -418,6 +427,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 			return read(b);
 	}
 
+	@Override
 	public int readFully(byte[] b, int offs, int len) throws IOException
 	{
 		if (raFile != null)
@@ -429,6 +439,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 			return read(b, offs, len);
 	}
 
+	@Override
 	public boolean readBoolean() throws IOException
 	{
 		if (raFile != null)
@@ -441,6 +452,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		}
 	}
 
+	@Override
 	public char readChar() throws IOException
 	{
 		if (raFile != null)
@@ -454,6 +466,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		}
 	}
 
+	@Override
 	public short readShort() throws IOException
 	{
 		if (raFile != null)
@@ -467,6 +480,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		}
 	}
 
+	@Override
 	public double readDouble() throws IOException
 	{
 		if (raFile != null)
@@ -475,6 +489,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 			return Double.longBitsToDouble(readLong());
 	}
 
+	@Override
 	public float readFloat() throws IOException
 	{
 		if (raFile != null)
@@ -483,6 +498,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 			return Float.intBitsToFloat(readInt());
 	}
 
+	@Override
 	public int readInt() throws IOException
 	{
 		if (raFile != null)
@@ -498,6 +514,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		}
 	}
 
+	@Override
 	public String readLine() throws IOException
 	{
 		if (raFile != null)
@@ -535,6 +552,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		}
 	}
 
+	@Override
 	public long readLong() throws IOException
 	{
 		if (raFile != null)
@@ -543,6 +561,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 			return ((long) (readInt()) << 32) + (readInt() & 0xFFFFFFFFL);
 	}
 
+	@Override
 	public int readUnsignedByte() throws IOException
 	{
 		if (raFile != null)
@@ -555,6 +574,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		}
 	}
 
+	@Override
 	public int readUnsignedShort() throws IOException
 	{
 		if (raFile != null)
@@ -568,6 +588,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 		}
 	}
 
+	@Override
 	public String readUTF() throws IOException
 	{
 		if (raFile != null)
@@ -586,7 +607,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 
 			while (count < utflen)
 			{
-				c = (int) bytearr[count] & 0xff;
+				c = bytearr[count] & 0xff;
 				if (c > 127) break;
 				count++;
 				chararr[chararr_count++] = (char) c;
@@ -594,7 +615,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 
 			while (count < utflen)
 			{
-				c = (int) bytearr[count] & 0xff;
+				c = bytearr[count] & 0xff;
 				switch (c >> 4)
 				{
 					case 0:
@@ -614,7 +635,7 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 						/* 110x xxxx 10xx xxxx */
 						count += 2;
 						if (count > utflen) throw new UTFDataFormatException("malformed input: partial character at end");
-						char2 = (int) bytearr[count - 1];
+						char2 = bytearr[count - 1];
 						if ((char2 & 0xC0) != 0x80) throw new UTFDataFormatException("malformed input around byte " + count);
 						chararr[chararr_count++] = (char) (((c & 0x1F) << 6) | (char2 & 0x3F));
 						break;
@@ -622,8 +643,8 @@ public class RandomAccessInputStreamImpl extends InputStream implements RandomAc
 						/* 1110 xxxx 10xx xxxx 10xx xxxx */
 						count += 3;
 						if (count > utflen) throw new UTFDataFormatException("malformed input: partial character at end");
-						char2 = (int) bytearr[count - 2];
-						char3 = (int) bytearr[count - 1];
+						char2 = bytearr[count - 2];
+						char3 = bytearr[count - 1];
 						if (((char2 & 0xC0) != 0x80) || ((char3 & 0xC0) != 0x80)) throw new UTFDataFormatException("malformed input around byte " + (count - 1));
 						chararr[chararr_count++] = (char) (((c & 0x0F) << 12) | ((char2 & 0x3F) << 6) | ((char3 & 0x3F) << 0));
 						break;

@@ -119,6 +119,7 @@ public class GaplessSoundOutputStreamImpl extends SoundOutputStreamImpl
 	 * 
 	 * @since 27.02.2011
 	 */
+	@Override
 	public synchronized void closeAllDevices()
 	{
 		super.close();

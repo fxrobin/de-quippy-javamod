@@ -186,6 +186,7 @@ public class WaveFile extends RiffFile
 	/**
 	 *
 	 */
+	@Override
 	public int close()
 	{
 		int rc = DDC_SUCCESS;

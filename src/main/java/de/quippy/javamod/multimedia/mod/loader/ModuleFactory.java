@@ -59,7 +59,7 @@ public class ModuleFactory
 	 */
 	private static HashMap<String, Module> getFileExtensionMap()
 	{
-		if (fileExtensionMap == null) fileExtensionMap = new HashMap<String, Module>();
+		if (fileExtensionMap == null) fileExtensionMap = new HashMap<>();
 
 		return fileExtensionMap;
 	}
@@ -72,7 +72,7 @@ public class ModuleFactory
 	 */
 	private static ArrayList<Module> getModulesArray()
 	{
-		if (modulesArray == null) modulesArray = new ArrayList<Module>();
+		if (modulesArray == null) modulesArray = new ArrayList<>();
 		return modulesArray;
 	}
 
@@ -80,16 +80,16 @@ public class ModuleFactory
 	{
 		getModulesArray().add(mod);
 		String[] extensions = mod.getFileExtensionList();
-		for (int i = 0; i < extensions.length; i++)
-			getFileExtensionMap().put(extensions[i], mod);
+		for (String extension : extensions)
+			getFileExtensionMap().put(extension, mod);
 	}
 
 	public static void deregisterModule(Module mod)
 	{
 		getModulesArray().remove(mod);
 		String[] extensions = mod.getFileExtensionList();
-		for (int i = 0; i < extensions.length; i++)
-			getFileExtensionMap().remove(extensions[i]);
+		for (String extension : extensions)
+			getFileExtensionMap().remove(extension);
 	}
 
 	public static String[] getSupportedFileExtensions()

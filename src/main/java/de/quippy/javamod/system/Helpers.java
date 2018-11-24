@@ -37,12 +37,6 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.StringTokenizer;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.Line;
-import javax.sound.sampled.Mixer;
-
 /**
  * @author Daniel Becker
  * @since 22.04.2006
@@ -440,7 +434,7 @@ public class Helpers
 	public static final int FLTMODE_HIGHPASS = 1;
 	public static final int FLTMODE_BANDPASS = 2;
 	public static final int FILTER_SHIFT_BITS = 32;
-	public static final double FILTER_PRECISION = (double) (1L << FILTER_SHIFT_BITS);
+	public static final double FILTER_PRECISION = 1L << FILTER_SHIFT_BITS;
 
 	// Module flags
 	public static final int SONG_EMBEDMIDICFG = 0x0001;
@@ -1376,49 +1370,7 @@ public class Helpers
 		return (min * 60 + sec) * 1000L;
 	}
 
-	/**
-	 * Prints the info about all installed and available audio lines
-	 * 
-	 * @since 09.07.2006
-	 */
-	public static String getAudioInfos()
-	{
-		final StringBuilder result = (new StringBuilder("Running on ")).append(System.getProperty("os.arch"));
-		result.append("\nMixerInfo:\n");
-		final Mixer.Info[] mixerInfo = AudioSystem.getMixerInfo();
-		for (int i = 0; i < mixerInfo.length; i++)
-		{
-			result.append(mixerInfo[i]).append('\n');
-			Mixer mixer = AudioSystem.getMixer(mixerInfo[i]);
-			Line.Info[] targetLineInfos = mixer.getTargetLineInfo();
-			for (int j = 0; j < targetLineInfos.length; j++)
-			{
-				result.append("Targetline(").append(j).append("): ").append(targetLineInfos[j]).append('\n');
-				if (targetLineInfos[j] instanceof DataLine.Info)
-				{
-					AudioFormat audioFormats[] = ((DataLine.Info) targetLineInfos[j]).getFormats();
-					for (int u = 0; u < audioFormats.length; u++)
-					{
-						result.append("Audioformat(").append(u).append("): ").append(audioFormats[u]).append('\n');
-						// System.out.print("Checking..");
-						// DataLine.Info info = new
-						// DataLine.Info(TargetDataLine.class, audioFormats[u]);
-						// if (!AudioSystem.isLineSupported(info))
-						// {
-						// System.out.println("It is NOT supported.");
-						// }
-						// else
-						// {
-						// System.out.println("It is supported.");
-						// }
-					}
-				}
-			}
-			result.append("---------------------------------------------------------------------\n");
-		}
-		return result.toString();
-	}
-
+	
 	/**
 	 * Registers all Classes that should not load during playback
 	 * 

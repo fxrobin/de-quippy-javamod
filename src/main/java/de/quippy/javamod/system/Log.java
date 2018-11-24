@@ -37,7 +37,7 @@ public class Log
 	public static final int LOGLEVEL_DEBUG = 4;
 	public static final int LOGLEVEL_ALL = LOGLEVEL_DEBUG | LOGLEVEL_ERROR | LOGLEVEL_INFO;
 
-	private static ArrayList<LogMessageCallBack> logReceiver = new ArrayList<LogMessageCallBack>();
+	private static ArrayList<LogMessageCallBack> logReceiver = new ArrayList<>();
 	private static int currentLogLevel = LOGLEVEL_ALL;
 
 	private Log()

@@ -118,6 +118,7 @@ public class AudioProcessor
 		 * 
 		 * @see java.lang.Runnable#run()
 		 */
+		@Override
 		public void run()
 		{
 			process_alive = true;
@@ -186,9 +187,9 @@ public class AudioProcessor
 	{
 		super();
 		this.desiredBufferSize = desiredBufferSize;
-		this.waitForNanos = 1000000000L / (long) desiredFPS;
-		this.callBacks = new ArrayList<DspProcessorCallBack>();
-		this.effectCallBacks = new ArrayList<DSPEffekt>();
+		this.waitForNanos = 1000000000L / desiredFPS;
+		this.callBacks = new ArrayList<>();
+		this.effectCallBacks = new ArrayList<>();
 		dspEnabled = true;
 	}
 
@@ -426,7 +427,7 @@ public class AudioProcessor
 		int ox = 0;
 		for (int i = 0; i < anzSamples; i++, ox += bytesPerChannel)
 		{
-			int sample = (int) (sampleBuffer[(rx++) % sampleBufferSize] * (float) neg_Bit);
+			int sample = (int) (sampleBuffer[(rx++) % sampleBufferSize] * neg_Bit);
 
 			if (sample > maxSample)
 				sample = maxSample;

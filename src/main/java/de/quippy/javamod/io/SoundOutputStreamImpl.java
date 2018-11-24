@@ -182,6 +182,7 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	/**
 	 * @since 30.12.2007
 	 */
+	@Override
 	public synchronized void open()
 	{
 		close();
@@ -193,13 +194,15 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	/**
 	 * @since 30.12.2007
 	 */
+	@Override
 	public synchronized void close()
 	{
 		closeSourceLine();
 		closeAudioProcessor();
 		closeExportFile();
 	}
-
+	
+	@Override
 	public synchronized void closeAllDevices()
 	{
 		close();
@@ -209,6 +212,7 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	 * @since 30.12.2007
 	 * @return
 	 */
+	@Override
 	public synchronized boolean isInitialized()
 	{
 		return (sourceLine != null && sourceLine.isOpen()) || exportFile != null;
@@ -217,6 +221,7 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	/**
 	 * @since 30.12.2007
 	 */
+	@Override
 	public synchronized void startLine()
 	{
 		if (sourceLine != null)
@@ -229,6 +234,7 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	/**
 	 * @since 30.12.2007
 	 */
+	@Override
 	public synchronized void stopLine()
 	{
 		if (sourceLine != null)
@@ -256,6 +262,7 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	 * @param start
 	 * @param length
 	 */
+	@Override
 	public synchronized void writeSampleData(byte[] samples, int start, int length)
 	{
 		if (audioProcessor != null)
@@ -272,6 +279,7 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	 * @param newFramePosition
 	 * @see de.quippy.javamod.io.SoundOutputStream#setInternalFramePosition(long)
 	 */
+	@Override
 	public synchronized void setInternalFramePosition(long newFramePosition)
 	{
 		if (audioProcessor != null) audioProcessor.setInternalFramePosition(newFramePosition);
@@ -282,6 +290,7 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	 * @return -1 if no frameposition is available
 	 * @see de.quippy.javamod.io.SoundOutputStream#getFramePosition()
 	 */
+	@Override
 	public synchronized long getFramePosition()
 	{
 		if (audioProcessor != null)
@@ -298,6 +307,7 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	 * @since 01.11.2008
 	 * @param gain
 	 */
+	@Override
 	public synchronized void setVolume(float gain)
 	{
 		if (currentVolume != gain)
@@ -321,6 +331,7 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	 * @since 01.11.2008
 	 * @param gain
 	 */
+	@Override
 	public synchronized void setBalance(float balance)
 	{
 		if (currentBalance != balance)
@@ -339,6 +350,7 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	 *            the audioProcessor to set
 	 * @since 25.02.2011
 	 */
+	@Override
 	public synchronized void setAudioProcessor(AudioProcessor audioProcessor)
 	{
 		this.audioProcessor = audioProcessor;
@@ -349,6 +361,7 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	 *            the exportFile to set
 	 * @since 25.02.2011
 	 */
+	@Override
 	public synchronized void setExportFile(File exportFile)
 	{
 		this.exportFile = exportFile;
@@ -359,6 +372,7 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	 *            the waveExportFile to set
 	 * @since 25.02.2011
 	 */
+	@Override
 	public synchronized void setWaveExportFile(WaveFile waveExportFile)
 	{
 		this.waveExportFile = waveExportFile;
@@ -369,6 +383,7 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	 *            the playDuringExport to set
 	 * @since 25.02.2011
 	 */
+	@Override
 	public synchronized void setPlayDuringExport(boolean playDuringExport)
 	{
 		this.playDuringExport = playDuringExport;
@@ -379,11 +394,13 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	 *            the keepSilent to set
 	 * @since 25.02.2011
 	 */
+	@Override
 	public synchronized void setKeepSilent(boolean keepSilent)
 	{
 		this.keepSilent = keepSilent;
 	}
 
+	@Override
 	public boolean matches(SoundOutputStream otherStream)
 	{
 		return getAudioFormat().matches(otherStream.getAudioFormat());
@@ -392,6 +409,7 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	/**
 	 * @see de.quippy.javamod.io.SoundOutputStream#getAudioFormat()
 	 */
+	@Override
 	public synchronized AudioFormat getAudioFormat()
 	{
 		return audioFormat;
@@ -400,6 +418,7 @@ public class SoundOutputStreamImpl implements SoundOutputStream
 	/**
 	 * @see de.quippy.javamod.io.SoundOutputStream#changeAudioFormatTo(javax.sound.sampled.AudioFormat)
 	 */
+	@Override
 	public synchronized void changeAudioFormatTo(AudioFormat newAudioFormat)
 	{
 		boolean reOpen = sourceLine != null && sourceLine.isOpen();

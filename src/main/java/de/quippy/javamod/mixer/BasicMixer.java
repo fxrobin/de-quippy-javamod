@@ -183,16 +183,19 @@ public abstract class BasicMixer extends Mixer
 		return seekPosition;
 	}
 
+	@Override
 	public boolean isNotSeeking()
 	{
 		return seeking == ISNOTHING;
 	}
 
+	@Override
 	public boolean isInSeeking()
 	{
 		return seeking != ISNOTHING;
 	}
 
+	@Override
 	public boolean isSeeking()
 	{
 		return seeking == ISDONE;
